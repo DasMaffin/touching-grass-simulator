@@ -1,0 +1,95 @@
+# Unity generated folders
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Mm]emoryCaptures/
+[Uu]serSettings/
+
+# Visual Studio / MonoDevelop generated files
+.vscode/
+.vs
+*.vs
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.opendb
+*.VC.db
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# Unity-specific files
+/Assets/Plugins/*.dll
+/Assets/Plugins/*.meta
+/Assets/Plugins.meta
+*.meta
+*.unitypackage
+
+# Ignore crash logs and temporary files
+crashlytics-build.log
+*.apk
+*.obb
+*.unitypackage
+
+# Ignore IDE settings
+.idea/
+*.iml
+.vscode/
+*.code-workspace
+
+# JetBrains Rider settings
+.idea/
+*.idea/
+
+# Built game files
+*.exe
+*.apk
+*.unitypackage
+*.ipa
+
+# Other generated files
+*.stackdump
+*.patch
+*.diff
+
+# Uncomment if you have custom build folders
+# /Builds/
+
+# Temporary script or configuration files
+*.log
+*.stacktrace
+
+# Yarn/NPM
+node_modules/
+
+# For JetBrains Rider
+.idea/
+
+# Unity Asset Store Tools
+Assets/AssetStoreTools*
+
+# Exclude everything else except specific files/folders
+!Assets/
+!ProjectSettings/
+!Packages/
+
+Butterfly (Animated)/
+TextMesh Pro/
+Fantasy Forest Environment Free Sample/
+_TerrainAutoUpgrade/
+Low Poly Girl/
+QuickOutline/
