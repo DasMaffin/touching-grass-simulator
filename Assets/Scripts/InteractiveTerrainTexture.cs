@@ -67,16 +67,16 @@ public class InteractiveTerrainTexture : MonoBehaviour
         // Translate world coordinates to terrain alpha map coordinates
         //Vector3 terrainPosition = hitPoint - terrain.transform.position;
 
-        if(GameManager.Instance.GrassSeeds > 0)
+        if(GameManager.Instance.player.GrassSeeds > 0)
         {
-            SpawnGrassBlade(hitPoint.x, hitPoint.z);
-            GameManager.Instance.GrassSeeds--;
+            SpawnGrassBlade(hitPoint.x, hitPoint.y, hitPoint.z);
+            GameManager.Instance.player.GrassSeeds--;
         }
     }
 
-    private void SpawnGrassBlade(float x, float z)
+    private void SpawnGrassBlade(float x, float y, float z)
     {
-        Instantiate(grassBlade, new Vector3(x, 0, z), Quaternion.identity);
+        Instantiate(grassBlade, new Vector3(x, y, z), Quaternion.identity);
 
         UpdateAlphaMap((int)x, (int)z, 0.1f);
     }

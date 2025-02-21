@@ -3,23 +3,8 @@ using System;
 using NUnit.Framework;
 using System.Collections.Generic;
 
-public class GameManager : MonoBehaviour
+public class Player
 {
-    private static GameManager instance;
-    public static GameManager Instance
-    {
-        get { return instance; }
-        set
-        {
-            if(instance != null)
-            {
-                Destroy(value.gameObject);
-                return;
-            }
-            instance = value;
-        }
-    }
-
     public event Action<int> OnGrassSeedsChanged;
     private int grassSeeds = 1;
     public int GrassSeeds
@@ -56,20 +41,65 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public InteractiveTerrainTexture ITT;
+    public event Action<float> OnAvailableWaterChanged;
+    private float availableWater;
+    public float AvailableWater
+    {
+        get
+        {
+            return availableWater;
+        }
+        set
+        {
+            availableWater = value;
+            OnAvailableWaterChanged?.Invoke(availableWater);
+        }
+    }
 
+
+    public bool IsWatering = false;
+    public void UseWateringCan()
+    {
+        if(IsWatering)
+        {
+            AvailableWater -= 1f * Time.deltaTime;
+        }
+    }
+}
+
+public class GameManager : MonoBehaviour
+{
+    private static GameManager instance;
+    public static GameManager Instance
+    {
+        get { return instance; }
+        set
+        {
+            if(instance != null)
+            {
+                Destroy(value.gameObject);
+                return;
+            }
+            instance = value;
+        }
+    }
+
+    public InteractiveTerrainTexture ITT;
     public Stack<GameObject> menuHistory = new Stack<GameObject>();
+    public Player player;
 
     void Awake()
     {
         instance = this;
+        player = new Player();
     }
 
     private void Start()
     {
-        GrassSeeds = 1;
-        GrassBlades = 0;
-        Money = 0;
+        player.GrassSeeds = 1;
+        player.GrassBlades = 0;
+        player.Money = 0;
+        player.AvailableWater = 100f;
     }
 
     public void QuitGame()

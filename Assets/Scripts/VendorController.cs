@@ -18,21 +18,21 @@ public class VendorController : Interactible
     {
         if(GrassBuyer)
         {
-            if(GameManager.Instance.GrassBlades <= 0)
+            if(GameManager.Instance.player.GrassBlades <= 0)
             {
                 return;
             }
-            GameManager.Instance.Money += 1.5f * GameManager.Instance.GrassBlades;
-            GameManager.Instance.GrassBlades = 0;
+            GameManager.Instance.player.Money += 1.5f * GameManager.Instance.player.GrassBlades;
+            GameManager.Instance.player.GrassBlades = 0;
         }
         else
         {
-            if(GameManager.Instance.Money < 1)
+            if(GameManager.Instance.player.Money < 1)
             {
                 return;
             }
-            GameManager.Instance.Money--;
-            GameManager.Instance.GrassSeeds++;
+            GameManager.Instance.player.Money--;
+            GameManager.Instance.player.GrassSeeds++;
         }
     }
 }

@@ -3,12 +3,15 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
+    public Animator wateringCanAnimator;
     public float moveSpeed = 5.0f; // Walking speed
     public float gravity = -9.81f; // Gravity force
     public float jumpHeight = 1.5f; // Jump height
 
     private CharacterController characterController;
     private Vector3 velocity; // Current velocity for gravity and jumping
+
+
 
     void Start()
     {
@@ -18,6 +21,20 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         MovePlayer();
+
+        if(Input.GetKeyDown(KeyCode.Mouse1))
+        {
+            wateringCanAnimator.SetBool("IsWatering", true);
+            GameManager.Instance.player.IsWatering = true;
+
+        }
+        else if(Input.GetKeyUp(KeyCode.Mouse1))
+        {
+            wateringCanAnimator.SetBool("IsWatering", false);
+            GameManager.Instance.player.IsWatering = false;
+        }
+
+        GameManager.Instance.player.UseWateringCan();
     }
 
     private void MovePlayer()

@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System;
 using UnityEngine;
 
@@ -29,6 +30,19 @@ public class UIController : MonoBehaviour
                 Settings.SetActive(true);
                 GameManager.Instance.menuHistory.Push(Settings);
                 Cursor.lockState = CursorLockMode.None;
+            }
+        }
+    }
+
+    public void CloseSettings(GameObject closeObject)
+    {
+        while(true)
+        {
+            GameObject go = GameManager.Instance.menuHistory.Pop();
+            go.SetActive(false);
+            if(go == closeObject)
+            {
+                break;
             }
         }
     }

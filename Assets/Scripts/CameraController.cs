@@ -13,6 +13,8 @@ public class CameraController : MonoBehaviour
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked; // Lock the cursor to the center of the screen
+
+        mouseSensitivity = PlayerPrefs.GetFloat("MouseSensitivity", 2.0f);
         mouseSenseSlider.value = mouseSensitivity;
     }
 
@@ -30,6 +32,7 @@ public class CameraController : MonoBehaviour
     public void ChangeSensitivity(float sense)
     {
         mouseSensitivity = sense;
+        SettingsSave.Instance.SaveMouseSensitivity(sense);
     }
 
     private void RotateCamera()
