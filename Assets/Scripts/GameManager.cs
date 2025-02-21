@@ -58,7 +58,7 @@ public class GameManager : MonoBehaviour
 
     public InteractiveTerrainTexture ITT;
 
-    public List<GameObject> menuHistory = new List<GameObject>();
+    public Stack<GameObject> menuHistory = new Stack<GameObject>();
 
     void Awake()
     {

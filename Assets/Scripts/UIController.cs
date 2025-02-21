@@ -6,7 +6,7 @@ public class UIController : MonoBehaviour
     public GameObject Settings;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+   void Start()
     {
         Settings.SetActive(false);
     }
@@ -18,8 +18,7 @@ public class UIController : MonoBehaviour
         {
             if(GameManager.Instance.menuHistory.Count != 0)
             {
-                GameManager.Instance.menuHistory[GameManager.Instance.menuHistory.Count - 1].SetActive(false);
-                GameManager.Instance.menuHistory.RemoveAt(GameManager.Instance.menuHistory.Count - 1);
+                GameManager.Instance.menuHistory.Pop().SetActive(false);
                 if(GameManager.Instance.menuHistory.Count == 0)
                 {
                     Cursor.lockState = CursorLockMode.Locked;
@@ -28,7 +27,7 @@ public class UIController : MonoBehaviour
             else
             {
                 Settings.SetActive(true);
-                GameManager.Instance.menuHistory.Add(Settings);
+                GameManager.Instance.menuHistory.Push(Settings);
                 Cursor.lockState = CursorLockMode.None;
             }
         }
