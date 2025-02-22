@@ -1,11 +1,14 @@
 using System.Collections.Generic;
+using System.Drawing;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class InteractiveTerrainTexture : MonoBehaviour
 {
     public Terrain terrain; // Assign your terrain in the Inspector
     public GameObject grassBlade; // Assign your grass blade prefab in the Inspector
     public float clickRadius = 1.0f; // Radius of the click's effect
+    public LayerMask layersToCheck;
 
     private TerrainData terrainData;
     private int alphamapWidth;
@@ -33,7 +36,7 @@ public class InteractiveTerrainTexture : MonoBehaviour
         if(Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if(Physics.Raycast(ray, out RaycastHit hit, 4))
+            if(Physics.Raycast(ray, out RaycastHit hit, 4, layersToCheck))
             {
                 if(hit.collider.gameObject == terrain.gameObject)
                 {
@@ -45,28 +48,59 @@ public class InteractiveTerrainTexture : MonoBehaviour
 
     private void ResetAlphaMap()
     {
-        // Initialize a new alpha map array
         float[,,] alphaMaps = new float[alphamapWidth, alphamapHeight, terrainData.alphamapLayers];
 
-        // Set the default layer (layer 0) to fully cover the terrain
         for(int z = 0; z < alphamapHeight; z++)
         {
             for(int x = 0; x < alphamapWidth; x++)
             {
-                alphaMaps[z, x, 0] = 1.0f; // Fully assign default layer
-                alphaMaps[z, x, 1] = 0.0f; // Transition layer starts at 0
+                // Convert alpha map indices to world position
+                float normX = (float)x / (alphamapWidth - 1);
+                float normZ = (float)z / (alphamapHeight - 1);
+                Vector3 worldPos = new Vector3(
+                    normX * terrainData.size.x + terrain.transform.position.x,
+                    0,
+                    normZ * terrainData.size.z + terrain.transform.position.z
+                );
+
+                bool isWatered = IsPointInsideCollider(worldPos);
+
+                // Reset all layers to 0
+                for(int layer = 0; layer < terrainData.alphamapLayers; layer++)
+                {
+                    alphaMaps[z, x, layer] = 0f;
+                }
+
+                // Set the appropriate layer based on collision
+                if(isWatered)
+                {
+                    alphaMaps[z, x, 3] = 1f; // Grass_Soil_A layer (index 3)
+                }
+                else
+                {
+                    alphaMaps[z, x, 0] = 1f; // Dirt layer (index 0)
+                }
             }
         }
 
-        // Apply the reset alpha map to the terrain
         terrainData.SetAlphamaps(0, 0, alphaMaps);
+    }
+
+    bool IsPointInsideCollider(Vector3 point)
+    {
+        foreach(Collider collider in Physics.OverlapSphere(point, 0.1f, ~0, QueryTriggerInteraction.Collide))
+        {
+            //print(collider.gameObject.layer);
+            if(collider.gameObject.layer == LayerMask.NameToLayer("Watered"))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void HandleGrassBlade(Vector3 hitPoint)
     {
-        // Translate world coordinates to terrain alpha map coordinates
-        //Vector3 terrainPosition = hitPoint - terrain.transform.position;
-
         if(GameManager.Instance.player.GrassSeeds > 0)
         {
             SpawnGrassBlade(hitPoint.x, hitPoint.y, hitPoint.z);
@@ -76,18 +110,20 @@ public class InteractiveTerrainTexture : MonoBehaviour
 
     private void SpawnGrassBlade(float x, float y, float z)
     {
-        Instantiate(grassBlade, new Vector3(x, y, z), Quaternion.identity);
+        GameManager.Instance.InstantiateGrass(new Vector3(x, y, z));
 
-        UpdateAlphaMap((int)x, (int)z, 0.1f);
+        UpdateAlphaMap(x, y, z, 0.1f);
     }
 
-    public void RemoveGrassBlade(float x, float z)
+    public void RemoveGrassBlade(float x, float y, float z)
     {
-        UpdateAlphaMap((int)x, (int)z, -0.1f);
+        UpdateAlphaMap(x, y, z, -0.1f);
     }
 
-    private void UpdateAlphaMap(int x, int z, float changeAmount)
+    private void UpdateAlphaMap(float x, float y, float z, float changeAmount)
     {
+        Vector3 hitPoint = new Vector3(x, y, z);
+
         Vector3 terrainPosition = new Vector3(x, 0, z) - terrain.transform.position;
         x = Mathf.RoundToInt((terrainPosition.x / terrainData.size.x) * alphamapWidth);
         z = Mathf.RoundToInt((terrainPosition.z / terrainData.size.z) * alphamapHeight);
@@ -97,13 +133,22 @@ public class InteractiveTerrainTexture : MonoBehaviour
         // Apply the change only to the clicked position
         if(x >= 0 && x < alphamapWidth && z >= 0 && z < alphamapHeight)
         {
+            int mapToUseIndex = 0;
+            foreach(Collider collider in Physics.OverlapSphere(hitPoint, 0.1f, ~0, QueryTriggerInteraction.Collide))
+            {
+                if(collider.gameObject.layer == LayerMask.NameToLayer("Watered") && collider.gameObject.name != "WateringCanWateringArea")
+                {
+                    mapToUseIndex = 3;
+                    break;
+                }
+            }
             // Update the transition layer (layer 1) based on grass presence
-            alphaMaps[z, x, 1] = Mathf.Clamp01(alphaMaps[z, x, 1] + changeAmount);
+            alphaMaps[(int)z, (int)x, 1] = Mathf.Clamp01(alphaMaps[(int)z, (int)x, 1] + changeAmount);
 
             // Normalize layers to ensure the sum is 1
-            float total = alphaMaps[z, x, 0] + alphaMaps[z, x, 1];
-            alphaMaps[z, x, 0] = Mathf.Clamp01(alphaMaps[z, x, 0] + (1.0f - total));
-            alphaMaps[z, x, 1] = Mathf.Clamp01(alphaMaps[z, x, 1]);
+            float total = alphaMaps[(int)z, (int)x, mapToUseIndex] + alphaMaps[(int)z, (int)x, 1];
+            alphaMaps[(int)z, (int)x, mapToUseIndex] = Mathf.Clamp01(alphaMaps[(int)z, (int)x, mapToUseIndex] + (1.0f - total));
+            alphaMaps[(int)z, (int)x, 1] = Mathf.Clamp01(alphaMaps[(int)z, (int)x, 1]);
 
             // Apply the modified alpha map back to the terrain
             terrainData.SetAlphamaps(0, 0, alphaMaps);

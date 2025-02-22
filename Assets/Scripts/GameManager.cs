@@ -87,6 +87,8 @@ public class GameManager : MonoBehaviour
     public InteractiveTerrainTexture ITT;
     public Stack<GameObject> menuHistory = new Stack<GameObject>();
     public Player player;
+    public GameObject[] grassSkin;
+    public GameObject selectedGrassSkin;
 
     void Awake()
     {
@@ -105,5 +107,10 @@ public class GameManager : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    internal void InstantiateGrass(Vector3 location)
+    {
+        Instantiate(selectedGrassSkin, location, Quaternion.identity);
     }
 }

@@ -12,6 +12,7 @@ public class GrassBladeController : Interactible
     private int enteredWaters = 0;
     private bool watered = false;
     private bool FinishedGrowing { get { return currentSize >= desiredSize; } }
+    private int daisies = 0;
 
     private new void Awake()
     {
@@ -47,6 +48,16 @@ public class GrassBladeController : Interactible
             enteredWaters++;
             watered = true;
         }
+        switch(other.gameObject.GetComponent<FlowerController>()?.Flower)
+        {
+            case Flower.Daisy:
+                daisies++;
+                break;
+            case Flower.Dandelion:
+                break;
+            case Flower.None:
+                break;
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -76,7 +87,11 @@ public class GrassBladeController : Interactible
         if(FinishedGrowing)
         {
             GameManager.Instance.player.GrassBlades++;
-            GameManager.Instance.ITT.RemoveGrassBlade(this.transform.position.x, this.transform.position.z);
+            while(UnityEngine.Random.Range(0, 101) < 5 * daisies)
+            {
+                GameManager.Instance.player.GrassBlades++;
+            }
+            GameManager.Instance.ITT.RemoveGrassBlade(this.transform.position.x, this.transform.position.y, this.transform.position.z);
             Destroy(gameObject);
         }
     }

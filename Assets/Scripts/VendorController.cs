@@ -27,12 +27,9 @@ public class VendorController : Interactible
         }
         else
         {
-            if(GameManager.Instance.player.Money < 1)
-            {
-                return;
-            }
-            GameManager.Instance.player.Money--;
-            GameManager.Instance.player.GrassSeeds++;
+            UIController.Instance.Shop.SetActive(true);
+            GameManager.Instance.menuHistory.Push(UIController.Instance.Shop);
+            Cursor.lockState = CursorLockMode.None;
         }
     }
 }

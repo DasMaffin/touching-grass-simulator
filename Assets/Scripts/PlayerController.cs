@@ -20,15 +20,17 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if(GameManager.Instance.menuHistory.Count != 0) return;
+
         MovePlayer();
 
-        if(Input.GetKeyDown(KeyCode.Mouse1))
+        if(Input.GetKeyDown(KeyCode.Mouse1) && GameManager.Instance.player.AvailableWater > 0)
         {
             wateringCanAnimator.SetBool("IsWatering", true);
             GameManager.Instance.player.IsWatering = true;
 
         }
-        else if(Input.GetKeyUp(KeyCode.Mouse1))
+        else if(Input.GetKeyUp(KeyCode.Mouse1) || GameManager.Instance.player.AvailableWater <= 0 && GameManager.Instance.player.IsWatering)
         {
             wateringCanAnimator.SetBool("IsWatering", false);
             GameManager.Instance.player.IsWatering = false;

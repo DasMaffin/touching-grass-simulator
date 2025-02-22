@@ -40,8 +40,8 @@ public class SettingsSave : MonoBehaviour
         PlayerPrefs.SetFloat("MouseSensitivity", sense);
     }
 
-    public Settings LoadCredits()
+    public void SaveSelectedSkin(int index)
     {
-        return null;
+        PlayerPrefs.SetInt("SelectedSkin", index);
     }
 }
