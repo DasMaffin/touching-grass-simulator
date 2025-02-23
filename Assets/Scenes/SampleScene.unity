@@ -976,7 +976,7 @@ MonoBehaviour:
   wateringCanAnimator: {fileID: 1167500093}
   moveSpeed: 5
   gravity: -9.81
-  jumpHeight: 1.5
+  jumpHeight: 0.5
 --- !u!143 &146032737
 CharacterController:
   m_ObjectHideFlags: 0
@@ -14108,7 +14108,7 @@ MonoBehaviour:
   grassSkins:
   - {fileID: 5643573890704990417, guid: 8b4a75925cc90e041ad02140dea9a573, type: 3}
   - {fileID: 7284248873579368030, guid: 77c0acfb0fe3a804984a0a808a319c24, type: 3}
-  selectedGrassSkin: {fileID: 0}
+  selectedGrassSkin: 0
   noneSprite: {fileID: 21300000, guid: 52de92af4383afa4392e663488ca1218, type: 3}
   seedsSprite: {fileID: 21300000, guid: f4fad366efa00bc49aa69abe3a692b4d, type: 3}
   bladesSprite: {fileID: 21300000, guid: 30a59a2334e96e94f940ebaca3d4c58c, type: 3}

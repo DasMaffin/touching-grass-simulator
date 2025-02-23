@@ -28,7 +28,6 @@ public class PlayerController : MonoBehaviour
         {
             wateringCanAnimator.SetBool("IsWatering", true);
             GameManager.Instance.player.IsWatering = true;
-
         }
         else if(Input.GetKeyUp(KeyCode.Mouse1) || GameManager.Instance.player.AvailableWater <= 0 && GameManager.Instance.player.IsWatering)
         {
@@ -42,30 +41,33 @@ public class PlayerController : MonoBehaviour
     private void MovePlayer()
     {
         // Get input for movement
-        float horizontal = Input.GetAxis("Horizontal"); // A/D
-        float vertical = Input.GetAxis("Vertical"); // W/S
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
         Vector3 move = transform.right * horizontal + transform.forward * vertical;
 
-        // Apply movement
-        characterController.Move(move * moveSpeed * Time.deltaTime);
+        // Apply horizontal movement
+        Vector3 movement = move * moveSpeed * Time.deltaTime;
 
-        // Apply gravity
-        if(characterController.isGrounded && velocity.y < 0)
+        // Gravity & jumping
+        if(characterController.isGrounded)
         {
-            velocity.y = -2f; // Small value to keep grounded
+            if(velocity.y < 0)
+                velocity.y = -2f; // Keep grounded
+
+            if(Input.GetButtonDown("Jump"))
+            {
+                velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            }
         }
         else
         {
+            // Only add gravity when not grounded
             velocity.y += gravity * Time.deltaTime;
         }
 
-        // Apply jumping
-        if(Input.GetButtonDown("Jump") && characterController.isGrounded)
-        {
-            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
-        }
-
-        // Apply vertical velocity
-        characterController.Move(velocity * Time.deltaTime);
+        // Combine horizontal movement with vertical velocity
+        movement.y = velocity.y * Time.deltaTime;
+        characterController.Move(movement);
     }
+
 }
