@@ -94,7 +94,6 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        InventoryManager.Instance.AddItem(Item.GrassSeeds, 1);
         player.AvailableWater = 100f;
         player.Money = 50000f;
 
@@ -112,7 +111,11 @@ public class GameManager : MonoBehaviour
                 go => go.SetActive(true),
                 go =>
                 {                    
-                    GrassBladeController gbc = grassCache[go];
+                    if(!grassCache.TryGetValue(go, out GrassBladeController gbc))
+                    {
+                        gbc = go.GetComponent<GrassBladeController>();
+                        grassCache.Add(go, gbc);
+                    }
                     gbc.watered = false;
                     gbc.currentSize = 0.01f;
                     gbc.daisies = 0;

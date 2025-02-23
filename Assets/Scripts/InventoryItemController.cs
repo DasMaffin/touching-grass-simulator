@@ -21,6 +21,11 @@ public class InventoryItemController : MonoBehaviour, IPointerDownHandler, IPoin
     private Transform OGParent;
     private bool isDragging = false;
 
+    private void Start()
+    {
+        this.GetComponent<RectTransform>().sizeDelta = this.transform.parent.GetComponentInParent<RectTransform>().sizeDelta * 0.9f; // TODO Refactor the GetComponents out.
+    }
+
     public void OnPointerDown(PointerEventData eventData)
     {
         isDragging = true;
@@ -90,8 +95,14 @@ public class InventoryItemController : MonoBehaviour, IPointerDownHandler, IPoin
         return null;
     }
 
+    private bool firstUpdate = true;
     private void Update()
     {
+        if(firstUpdate)
+        {
+            //this.GetComponent<RectTransform>().sizeDelta = this.transform.parent.GetComponentInParent<RectTransform>().sizeDelta * 0.9f; // TODO Refactor the GetComponents out.
+            firstUpdate = false;
+        }
         if(isDragging)
         {
             this.transform.position = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10);
