@@ -34,10 +34,21 @@ public class InventoryItemController : MonoBehaviour, IPointerDownHandler, IPoin
         this.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
         GameObject hoveredElement = GetHoveredUIElement();
 
-        this.transform.SetParent((hoveredElement != null && hoveredElement.layer == LayerMask.NameToLayer("InventorySlot")) ? hoveredElement.transform : OGParent, false);
+        if (hoveredElement != null && hoveredElement != OGParent.gameObject && hoveredElement.layer == LayerMask.NameToLayer("InventorySlot")) 
+        {
+            this.transform.SetParent(hoveredElement.transform, false);
+            hoveredElement.GetComponent<InventorySlotController>().isFull = true;
+            OGParent.GetComponent<InventorySlotController>().isFull = false;
+        }
+        else
+        {
+            this.transform.SetParent(OGParent, false);
+        }
+
         foreach(Transform sibling in GetSiblings(transform))
         {
             sibling.transform.SetParent(OGParent, false);
+            OGParent.GetComponent<InventorySlotController>().isFull = true;
         }
     }
 

@@ -18,12 +18,12 @@ public class VendorController : Interactible
     {
         if(GrassBuyer)
         {
-            if(GameManager.Instance.player.GrassBlades <= 0)
+            if(InventoryManager.Instance.GetItemCount(Item.GrassBlades) <= 0)
             {
                 return;
             }
-            GameManager.Instance.player.Money += 1.5f * GameManager.Instance.player.GrassBlades;
-            GameManager.Instance.player.GrassBlades = 0;
+            GameManager.Instance.player.Money += 1.5f * InventoryManager.Instance.GetItemCount(Item.GrassBlades);
+            InventoryManager.Instance.RemoveAllItems(Item.GrassBlades);
         }
         else
         {

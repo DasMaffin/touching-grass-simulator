@@ -1,7 +1,4 @@
-using System.Collections.Generic;
-using System.Drawing;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class InteractiveTerrainTexture : MonoBehaviour
 {
@@ -33,7 +30,7 @@ public class InteractiveTerrainTexture : MonoBehaviour
     void Update()
     {
         // Check for left mouse button click
-        if(Input.GetMouseButtonDown(0))
+        if(Input.GetMouseButtonDown(0) && GameManager.Instance.menuHistory.Count == 0)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if(Physics.Raycast(ray, out RaycastHit hit, 4, layersToCheck))
@@ -101,10 +98,10 @@ public class InteractiveTerrainTexture : MonoBehaviour
 
     private void HandleGrassBlade(Vector3 hitPoint)
     {
-        if(GameManager.Instance.player.GrassSeeds > 0)
+        if(InventoryManager.Instance.GetItemCount(Item.GrassSeeds) > 0)
         {
             SpawnGrassBlade(hitPoint.x, hitPoint.y, hitPoint.z);
-            GameManager.Instance.player.GrassSeeds--;
+            InventoryManager.Instance.RemoveItem(Item.GrassSeeds, 1);
         }
     }
 

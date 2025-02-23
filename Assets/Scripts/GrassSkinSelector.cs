@@ -19,7 +19,7 @@ public class GrassSkinSelector : MonoBehaviour, IPointerClickHandler
         }
         if(myIndex == selectedSkin)
         {
-            GameManager.Instance.selectedGrassSkin = GameManager.Instance.grassSkin[myIndex];
+            GameManager.Instance.selectedGrassSkin = myIndex;
             border.SetActive(true);
         }
         else
@@ -42,7 +42,7 @@ public class GrassSkinSelector : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        GameManager.Instance.selectedGrassSkin = GameManager.Instance.grassSkin[myIndex];
+        GameManager.Instance.selectedGrassSkin = myIndex;
         OnSelectedChanged?.Invoke(myIndex);
         SettingsSave.Instance.SaveSelectedSkin(myIndex);
     }

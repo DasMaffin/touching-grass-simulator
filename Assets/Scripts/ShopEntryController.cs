@@ -3,19 +3,12 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum ShopItem
-{
-    None = 0,
-    GrassSeeds = 1,
-    Water = 2
-}
-
 public class ShopEntryController : MonoBehaviour
 {
 
     [SerializeField] private TMP_InputField inputField;
     [SerializeField] private float price;
-    [SerializeField] private ShopItem shopItem;
+    [SerializeField] private Item shopItem;
 
     private int totalAmount
     {
@@ -43,14 +36,16 @@ public class ShopEntryController : MonoBehaviour
     {
         switch(shopItem)
         {
-            case ShopItem.GrassSeeds:
-                GameManager.Instance.player.GrassSeeds += totalAmount;
+            case Item.GrassSeeds:
+                InventoryManager.Instance.AddItem(Item.GrassSeeds, totalAmount);
                 break;
-            case ShopItem.Water:
-            case ShopItem.None:
+            case Item.Water:
+            case Item.None:
                 break;
         }
+
         GameManager.Instance.player.Money -= totalPrice;
+        inputField.text = "0";
     }
 
     public void SelectMax()

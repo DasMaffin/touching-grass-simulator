@@ -44,39 +44,33 @@ public class UIController : MonoBehaviour
         Inventory.SetActive(false);
     }
 
-    // Update is called once per frame
     void Update()
     {
         if(Input.GetKeyDown(KeyCode.Escape))
         {
-            if(GameManager.Instance.menuHistory.Count != 0)
-            {
-
-                CloseSettings(Settings);
-            }
-            else
-            {
-                Settings.SetActive(true);
-                GameManager.Instance.menuHistory.Push(Settings);
-                Cursor.lockState = CursorLockMode.None;
-            }
+            HandleMenuInput(Settings);
         }
         else if(Input.GetKeyDown(KeyCode.Tab))
         {
-            if(GameManager.Instance.menuHistory.Count != 0)
-            {
-                CloseSettings(Inventory);
-            }
-            else
-            {
-                Inventory.SetActive(true);
-                GameManager.Instance.menuHistory.Push(Inventory);
-                Cursor.lockState = CursorLockMode.None;
-            }
+            HandleMenuInput(Inventory);
         }
     }
 
-    public void CloseSettings(GameObject closeObject)
+    void HandleMenuInput(GameObject menuToOpen)
+    {
+        if(GameManager.Instance.menuHistory.Count != 0)
+        {
+            CloseMenu(GameManager.Instance.menuHistory.Peek());
+        }
+        else
+        {
+            menuToOpen.SetActive(true);
+            GameManager.Instance.menuHistory.Push(menuToOpen);
+            Cursor.lockState = CursorLockMode.None;
+        }
+    }
+
+    public void CloseMenu(GameObject closeObject)
     {
         while(true)
         {

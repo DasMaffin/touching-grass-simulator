@@ -11,8 +11,6 @@ public class StatUpdater : MonoBehaviour
 
     void Awake()
     {
-        GameManager.Instance.player.OnGrassSeedsChanged += UpdateGrassSeedsUI;
-        GameManager.Instance.player.OnGrassBladesChanged += UpdateGrassBladesUI;
         GameManager.Instance.player.OnMoneyChanged += UpdateMoneyUI;
         GameManager.Instance.player.OnAvailableWaterChanged += UpdateAvailableWaterUI;
     }

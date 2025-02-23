@@ -2,33 +2,10 @@ using UnityEngine;
 using System;
 using NUnit.Framework;
 using System.Collections.Generic;
+using UnityEngine.Pool;
 
 public class Player
 {
-    public event Action<int> OnGrassSeedsChanged;
-    private int grassSeeds = 1;
-    public int GrassSeeds
-    {
-        get { return grassSeeds; }
-        set
-        {
-            grassSeeds = value;
-            OnGrassSeedsChanged?.Invoke(grassSeeds); // Trigger event
-        }
-    }
-
-    public event Action<int> OnGrassBladesChanged;
-    private int grassBlades = 0;
-    public int GrassBlades
-    {
-        get { return grassBlades; }
-        set
-        {
-            grassBlades = value;
-            OnGrassBladesChanged?.Invoke(grassBlades); // Trigger event
-        }
-    }
-
     public event Action<float> OnMoneyChanged;
     private float money = 0;
     public float Money
@@ -69,6 +46,8 @@ public class Player
 
 public class GameManager : MonoBehaviour
 {
+    #region Singleton
+
     private static GameManager instance;
     public static GameManager Instance
     {
@@ -84,33 +63,81 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    #endregion
+
     public InteractiveTerrainTexture ITT;
     public Stack<GameObject> menuHistory = new Stack<GameObject>();
     public Player player;
-    public GameObject[] grassSkin;
-    public GameObject selectedGrassSkin;
+    public GameObject[] grassSkins;
+    public Dictionary<Item, Sprite> itemSpriteMap;
+    public List<ObjectPool<GameObject>> grassPools = new List<ObjectPool<GameObject>>();
+
+    [HideInInspector] public int selectedGrassSkin;
+
+    [SerializeField] private Sprite noneSprite;
+    [SerializeField] private Sprite seedsSprite;
+    [SerializeField] private Sprite bladesSprite;
+
+    private Dictionary<GameObject, GrassBladeController> grassCache = new Dictionary<GameObject, GrassBladeController>();
 
     void Awake()
     {
         instance = this;
         player = new Player();
+        itemSpriteMap = new Dictionary<Item, Sprite>
+        {
+            { Item.None, noneSprite },
+            { Item.GrassSeeds, seedsSprite },
+            { Item.GrassBlades, bladesSprite }
+        };
     }
 
     private void Start()
     {
-        player.GrassSeeds = 1;
-        player.GrassBlades = 0;
-        player.Money = 0;
+        InventoryManager.Instance.AddItem(Item.GrassSeeds, 1);
         player.AvailableWater = 100f;
+        player.Money = 50000f;
+
+        for(int i = 0; i < grassSkins.Length; i++)
+        {
+            int index = i;
+            grassPools.Add(new ObjectPool<GameObject>(
+                () =>
+                {
+                    GameObject go = Instantiate(grassSkins[index]);
+                    GrassBladeController gbc = go.GetComponent<GrassBladeController>();
+                    grassCache[go] = gbc;
+                    return go;
+                },
+                go => go.SetActive(true),
+                go =>
+                {                    
+                    GrassBladeController gbc = grassCache[go];
+                    gbc.watered = false;
+                    gbc.currentSize = 0.01f;
+                    gbc.daisies = 0;
+                    gbc.OnHoverExit();
+                    go.transform.localScale = new Vector3(gbc.currentSize, gbc.currentSize, gbc.currentSize);
+                    go.SetActive(false);
+                },
+                go => Destroy(go),
+                false,
+                10000,
+                100000
+            ));
+        }
+    }
+
+    internal void InstantiateGrass(Vector3 location)
+    {
+        GameObject grass = grassPools[selectedGrassSkin].Get();
+        grass.transform.position = location;
+        grass.transform.rotation = Quaternion.identity;
+
     }
 
     public void QuitGame()
     {
         Application.Quit();
-    }
-
-    internal void InstantiateGrass(Vector3 location)
-    {
-        Instantiate(selectedGrassSkin, location, Quaternion.identity);
     }
 }

@@ -1,18 +1,26 @@
+using Unity.Collections;
+using Unity.Jobs;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 
 public class GrassBladeController : Interactible
 {
+    #region resetValues
+
+    // These values need to be reset after returning to the pool.
+    public bool watered = false;
+    public float currentSize = 0.01f;
+    public int daisies = 0;
+
+    #endregion
+
     private float desiredSize = 1f;
     private float growSpeed = 0.01f;
-    private float currentSize = 0.01f;
     private float wateredMultiplier = 10.0f;
 
     private int enteredWaters = 0;
-    private bool watered = false;
     private bool FinishedGrowing { get { return currentSize >= desiredSize; } }
-    private int daisies = 0;
 
     private new void Awake()
     {
@@ -78,7 +86,6 @@ public class GrassBladeController : Interactible
 
     public override void OnHoverExit()
     {
-        if(!FinishedGrowing) return;
         outline.enabled = false;
     }
 
@@ -86,13 +93,14 @@ public class GrassBladeController : Interactible
     {
         if(FinishedGrowing)
         {
-            GameManager.Instance.player.GrassBlades++;
+            InventoryManager.Instance.AddItem(Item.GrassBlades, 1);
             while(UnityEngine.Random.Range(0, 101) < 5 * daisies)
             {
-                GameManager.Instance.player.GrassBlades++;
+                InventoryManager.Instance.AddItem(Item.GrassBlades, 1);
             }
             GameManager.Instance.ITT.RemoveGrassBlade(this.transform.position.x, this.transform.position.y, this.transform.position.z);
-            Destroy(gameObject);
+
+            GameManager.Instance.grassPools[GameManager.Instance.selectedGrassSkin].Release(this.gameObject);
         }
     }
 }
