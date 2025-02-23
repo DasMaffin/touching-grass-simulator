@@ -20,10 +20,10 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if(GameManager.Instance.menuHistory.Count != 0) return;
 
         MovePlayer();
 
+        if(GameManager.Instance.menuHistory.Count != 0) return;
         if(Input.GetKeyDown(KeyCode.Mouse1) && GameManager.Instance.player.AvailableWater > 0)
         {
             wateringCanAnimator.SetBool("IsWatering", true);
@@ -43,6 +43,7 @@ public class PlayerController : MonoBehaviour
         // Get input for movement
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
+        if(GameManager.Instance.menuHistory.Count != 0) horizontal = vertical = 0;
         Vector3 move = transform.right * horizontal + transform.forward * vertical;
 
         // Apply horizontal movement
@@ -54,7 +55,7 @@ public class PlayerController : MonoBehaviour
             if(velocity.y < 0)
                 velocity.y = -2f; // Keep grounded
 
-            if(Input.GetButtonDown("Jump"))
+            if(Input.GetButtonDown("Jump") && GameManager.Instance.menuHistory.Count != 0)
             {
                 velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
             }
