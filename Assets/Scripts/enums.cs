@@ -10,5 +10,5 @@ public enum Item
     None = 0,
     GrassSeeds = 1,
     GrassBlades = 2,
-    Water = 3
+    WateringCan = 3
 }

@@ -10,7 +10,7 @@ public class GrassSkinSelector : MonoBehaviour, IPointerClickHandler
     private static event Action<int> OnSelectedChanged;
     private static int selectedSkin = int.MinValue;
 
-    private void Start()
+    private void Awake()
     {
         OnSelectedChanged += OnSelectedChangedHandler;
         if(selectedSkin == int.MinValue)

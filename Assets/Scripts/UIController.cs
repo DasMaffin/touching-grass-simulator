@@ -72,6 +72,7 @@ public class UIController : MonoBehaviour
 
     public void CloseMenu(GameObject closeObject)
     {
+        InventoryItemController.SelectedInstance?.OnPointerUp(null);
         while(true)
         {
             GameObject go = GameManager.Instance.menuHistory.Pop();

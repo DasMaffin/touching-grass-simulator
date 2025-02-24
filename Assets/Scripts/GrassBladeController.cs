@@ -15,6 +15,8 @@ public class GrassBladeController : Interactible
 
     #endregion
 
+    public int selectedGrassSkin = 0;
+
     private float desiredSize = 1f;
     private float growSpeed = 0.01f;
     private float wateredMultiplier = 10.0f;
@@ -100,7 +102,7 @@ public class GrassBladeController : Interactible
             }
             GameManager.Instance.ITT.RemoveGrassBlade(this.transform.position.x, this.transform.position.y, this.transform.position.z);
 
-            GameManager.Instance.grassPools[GameManager.Instance.selectedGrassSkin].Release(this.gameObject);
+            GameManager.Instance.grassPools[selectedGrassSkin].Release(this.gameObject);
         }
     }
 }

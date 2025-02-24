@@ -3,15 +3,39 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
+    #region Singleton
+
+    private static PlayerController instance;
+    public static PlayerController Instance
+    {
+        get { return instance; }
+        set
+        {
+            if(instance != null)
+            {
+                Destroy(value.gameObject);
+                return;
+            }
+            instance = value;
+        }
+    }
+
+    #endregion
+
     public Animator wateringCanAnimator;
     public float moveSpeed = 5.0f; // Walking speed
     public float gravity = -9.81f; // Gravity force
     public float jumpHeight = 1.5f; // Jump height
+    public GameObject wateringCan;
+    public GameObject wateringCanUI;
 
     private CharacterController characterController;
     private Vector3 velocity; // Current velocity for gravity and jumping
 
-
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     void Start()
     {
@@ -20,22 +44,32 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-
         MovePlayer();
+    }
 
-        if(GameManager.Instance.menuHistory.Count != 0) return;
-        if(Input.GetKeyDown(KeyCode.Mouse1) && GameManager.Instance.player.AvailableWater > 0)
-        {
-            wateringCanAnimator.SetBool("IsWatering", true);
-            GameManager.Instance.player.IsWatering = true;
-        }
-        else if(Input.GetKeyUp(KeyCode.Mouse1) || GameManager.Instance.player.AvailableWater <= 0 && GameManager.Instance.player.IsWatering)
-        {
-            wateringCanAnimator.SetBool("IsWatering", false);
-            GameManager.Instance.player.IsWatering = false;
-        }
+    public void SelectWateringCan()
+    {
+        wateringCanUI.SetActive(true);
+        wateringCan.SetActive(true);
+    }
 
-        GameManager.Instance.player.UseWateringCan();
+    public void DeselectWateringCan()
+    {
+        wateringCanUI.SetActive(false);
+        wateringCan.SetActive(false);
+    }
+
+    public void UseWateringCan()
+    {
+        if(GameManager.Instance.player.AvailableWater <= 0) return;
+        wateringCanAnimator.SetBool("IsWatering", true);
+        GameManager.Instance.player.IsWatering = true;
+    }
+
+    public void StopUsingWateringCan()
+    {
+        wateringCanAnimator.SetBool("IsWatering", false);
+        GameManager.Instance.player.IsWatering = false;
     }
 
     private void MovePlayer()
@@ -55,7 +89,7 @@ public class PlayerController : MonoBehaviour
             if(velocity.y < 0)
                 velocity.y = -2f; // Keep grounded
 
-            if(Input.GetButtonDown("Jump") && GameManager.Instance.menuHistory.Count != 0)
+            if(Input.GetButtonDown("Jump") && GameManager.Instance.menuHistory.Count == 0)
             {
                 velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
             }

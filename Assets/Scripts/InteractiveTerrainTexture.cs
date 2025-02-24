@@ -5,7 +5,6 @@ public class InteractiveTerrainTexture : MonoBehaviour
     public Terrain terrain; // Assign your terrain in the Inspector
     public GameObject grassBlade; // Assign your grass blade prefab in the Inspector
     public float clickRadius = 1.0f; // Radius of the click's effect
-    public LayerMask layersToCheck;
 
     private TerrainData terrainData;
     private int alphamapWidth;
@@ -25,22 +24,6 @@ public class InteractiveTerrainTexture : MonoBehaviour
         alphamapHeight = terrainData.alphamapHeight;
 
         ResetAlphaMap();
-    }
-
-    void Update()
-    {
-        // Check for left mouse button click
-        if(Input.GetMouseButtonDown(0) && GameManager.Instance.menuHistory.Count == 0)
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if(Physics.Raycast(ray, out RaycastHit hit, 4, layersToCheck))
-            {
-                if(hit.collider.gameObject == terrain.gameObject)
-                {
-                    HandleGrassBlade(hit.point);
-                }
-            }
-        }
     }
 
     private void ResetAlphaMap()
@@ -96,12 +79,20 @@ public class InteractiveTerrainTexture : MonoBehaviour
         return false;
     }
 
-    private void HandleGrassBlade(Vector3 hitPoint)
+    public void HandleGrassBlade(RaycastHit hit, InventoryItem ii)
+    {
+        if(hit.collider.gameObject == terrain.gameObject)
+        {
+            HandleGrassBlade(hit.point, ii);
+        }
+    }
+
+    private void HandleGrassBlade(Vector3 hitPoint, InventoryItem ii)
     {
         if(InventoryManager.Instance.GetItemCount(Item.GrassSeeds) > 0)
         {
             SpawnGrassBlade(hitPoint.x, hitPoint.y, hitPoint.z);
-            InventoryManager.Instance.RemoveItem(Item.GrassSeeds, 1);
+            InventoryManager.Instance.RemoveItem(Item.GrassSeeds, 1, ii);
         }
     }
 

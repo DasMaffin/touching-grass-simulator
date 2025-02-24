@@ -39,6 +39,10 @@ public class Player
     {
         if(IsWatering)
         {
+            if(AvailableWater <= 0)
+            {
+                PlayerController.Instance.StopUsingWateringCan();
+            }
             AvailableWater -= 1f * Time.deltaTime;
         }
     }
@@ -77,6 +81,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Sprite noneSprite;
     [SerializeField] private Sprite seedsSprite;
     [SerializeField] private Sprite bladesSprite;
+    [SerializeField] private Sprite wateringCanSprite;
 
     private Dictionary<GameObject, GrassBladeController> grassCache = new Dictionary<GameObject, GrassBladeController>();
 
@@ -88,14 +93,16 @@ public class GameManager : MonoBehaviour
         {
             { Item.None, noneSprite },
             { Item.GrassSeeds, seedsSprite },
-            { Item.GrassBlades, bladesSprite }
+            { Item.GrassBlades, bladesSprite },
+            { Item.WateringCan, wateringCanSprite }
         };
     }
 
     private void Start()
     {
+        InventoryManager.Instance.AddItem(Item.WateringCan, 1);
+        player.Money = 10000f;
         player.AvailableWater = 100f;
-        player.Money = 50000f;
 
         for(int i = 0; i < grassSkins.Length; i++)
         {
@@ -105,12 +112,13 @@ public class GameManager : MonoBehaviour
                 {
                     GameObject go = Instantiate(grassSkins[index]);
                     GrassBladeController gbc = go.GetComponent<GrassBladeController>();
+                    gbc.selectedGrassSkin = index;
                     grassCache[go] = gbc;
                     return go;
                 },
                 go => go.SetActive(true),
                 go =>
-                {                    
+                {
                     if(!grassCache.TryGetValue(go, out GrassBladeController gbc))
                     {
                         gbc = go.GetComponent<GrassBladeController>();
@@ -129,6 +137,11 @@ public class GameManager : MonoBehaviour
                 100000
             ));
         }
+    }
+
+    private void Update()
+    {
+        player.UseWateringCan();
     }
 
     internal void InstantiateGrass(Vector3 location)

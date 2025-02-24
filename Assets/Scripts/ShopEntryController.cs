@@ -39,7 +39,6 @@ public class ShopEntryController : MonoBehaviour
             case Item.GrassSeeds:
                 InventoryManager.Instance.AddItem(Item.GrassSeeds, totalAmount);
                 break;
-            case Item.Water:
             case Item.None:
                 break;
         }

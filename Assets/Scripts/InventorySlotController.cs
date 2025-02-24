@@ -5,8 +5,8 @@ public class InventorySlotController : MonoBehaviour
 {
     public bool isHotBar;
     public bool isFull = false;
-
     public int slotId;
+    public InventoryItem ItemInSlot;
 
     private void Awake()
     {

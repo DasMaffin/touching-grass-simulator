@@ -1,10 +1,13 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class InventoryItemController : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
+    public static InventoryItemController SelectedInstance;
+
     private static GameObject inventoryContainer;
     private static GameObject InventoryContainer
     {
@@ -18,6 +21,8 @@ public class InventoryItemController : MonoBehaviour, IPointerDownHandler, IPoin
         }
     }
 
+    public InventoryItem item;
+
     private Transform OGParent;
     private bool isDragging = false;
 
@@ -28,22 +33,39 @@ public class InventoryItemController : MonoBehaviour, IPointerDownHandler, IPoin
 
     public void OnPointerDown(PointerEventData eventData)
     {
+        if(isDragging) return;
         isDragging = true;
         OGParent = this.transform.parent;
         this.transform.SetParent(InventoryContainer.transform, false);
+        SelectedInstance = this;
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
+        if(!isDragging) return;
+        SelectedInstance = null;
         isDragging = false;
         this.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
         GameObject hoveredElement = GetHoveredUIElement();
 
-        if (hoveredElement != null && hoveredElement != OGParent.gameObject && hoveredElement.layer == LayerMask.NameToLayer("InventorySlot")) 
+        if (hoveredElement != null && hoveredElement != OGParent.gameObject && hoveredElement.layer == LayerMask.NameToLayer("InventorySlot"))
         {
+            if(OGParent.GetComponent<InventorySlotController>().isHotBar && OGParent.GetComponent<InventorySlotController>().slotId == InventoryBarManager.Instance.ActiveSlot + 40)
+            {
+                item.Deselect();
+            }            
             this.transform.SetParent(hoveredElement.transform, false);
-            hoveredElement.GetComponent<InventorySlotController>().isFull = true;
+            if(hoveredElement.GetComponent<InventorySlotController>().isHotBar && hoveredElement.GetComponent<InventorySlotController>().slotId == InventoryBarManager.Instance.ActiveSlot + 40)
+            {
+                item.Select();
+            }
+
+            InventorySlotController isc = hoveredElement.GetComponent<InventorySlotController>();
+            isc.isFull = true;
+            isc.ItemInSlot = item;
+            item.slot = isc;
             OGParent.GetComponent<InventorySlotController>().isFull = false;
+            OGParent.GetComponent<InventorySlotController>().ItemInSlot = null;
         }
         else
         {
@@ -52,8 +74,22 @@ public class InventoryItemController : MonoBehaviour, IPointerDownHandler, IPoin
 
         foreach(Transform sibling in GetSiblings(transform))
         {
+            if(sibling.tag == "IgnoreInventory")
+            {
+                continue;
+            }
+            if(sibling.GetComponentInParent<InventorySlotController>().isHotBar && sibling.GetComponentInParent<InventorySlotController>().slotId == InventoryBarManager.Instance.ActiveSlot + 40)
+            {
+                sibling.GetComponent<InventoryItemController>().item.Deselect();
+            }
             sibling.transform.SetParent(OGParent, false);
             OGParent.GetComponent<InventorySlotController>().isFull = true;
+            OGParent.GetComponent<InventorySlotController>().ItemInSlot = sibling.GetComponent<InventoryItemController>().item;
+            sibling.GetComponent<InventoryItemController>().item.slot = OGParent.GetComponent<InventorySlotController>();
+            if(OGParent.GetComponent<InventorySlotController>().isHotBar && OGParent.GetComponent<InventorySlotController>().slotId == InventoryBarManager.Instance.ActiveSlot + 40)
+            {
+                sibling.GetComponent<InventoryItemController>().item.Select();
+            }
         }
     }
 
@@ -100,7 +136,7 @@ public class InventoryItemController : MonoBehaviour, IPointerDownHandler, IPoin
     {
         if(firstUpdate)
         {
-            //this.GetComponent<RectTransform>().sizeDelta = this.transform.parent.GetComponentInParent<RectTransform>().sizeDelta * 0.9f; // TODO Refactor the GetComponents out.
+            this.GetComponent<RectTransform>().sizeDelta = this.transform.parent.GetComponentInParent<RectTransform>().sizeDelta * 0.9f; // TODO Refactor the GetComponents out.
             firstUpdate = false;
         }
         if(isDragging)
