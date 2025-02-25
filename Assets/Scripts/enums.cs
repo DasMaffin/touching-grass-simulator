@@ -12,3 +12,12 @@ public enum Item
     GrassBlades = 2,
     WateringCan = 3
 }
+
+public enum Weather
+{
+    None = 0,
+    Sunny = 1,
+    LightRain = 2,
+    MediumRain = 3,
+    HeavyRain = 4
+}

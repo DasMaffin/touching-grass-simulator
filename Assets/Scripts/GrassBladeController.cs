@@ -35,13 +35,20 @@ public class GrassBladeController : Interactible
     {
         if(currentSize < 1f)
         {
+            float weatherMult = WeatherManager.Instance.GetGrowthMultiplier(watered);
+            if(weatherMult == -1)
+            {
+                return;
+            }
+            print("Intended Growth multiplier: " + WeatherManager.Instance.GetGrowthMultiplier(enteredWaters != 0));
+            print("Actual Growth speed: " + growSpeed);
             if(watered)
             {
-                currentSize += growSpeed * Time.deltaTime * wateredMultiplier;
+                currentSize += growSpeed * Time.deltaTime * wateredMultiplier * weatherMult;
             }
             else
             {
-                currentSize += growSpeed * Time.deltaTime;
+                currentSize += growSpeed * Time.deltaTime * weatherMult;
             }
         }
         else

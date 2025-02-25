@@ -178,6 +178,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
     public void LoadData(GameData data)
     {
         this.player.Money = data.money;
+        this.player.AvailableWater = 100f; // TODO data.water;
         foreach(GameData.GrassBladeData gbd in data.grassPlants)
         {
             GrassBladeController gbc = InstantiateGrass(gbd.location).GetComponent<GrassBladeController>();
@@ -188,6 +189,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
     public void SaveData(ref GameData data)
     {
         data.money = this.player.Money;
+        data.water = this.player.AvailableWater;
         data.grassPlants = new List<GameData.GrassBladeData>();
         foreach(GrassBladeController gbc in activeGrassBlades)
         {

@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.Playables;
 using UnityEngine.Pool;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 using UnityEngine.Windows;
 
@@ -35,11 +37,16 @@ public class Settings : MonoBehaviour
     #endregion
 
     [SerializeField] private Slider FramerateSlider;
+    [SerializeField] private Slider SFXVolumeSlider;
+
     [SerializeField] private TMP_InputField FrameInput;
     [SerializeField] private TMP_InputField PooledObjectsInput;
+    [SerializeField] private TMP_InputField SFXVolumeInput;
 
     [SerializeField] private TMP_Dropdown FullScreenSelection;
     [SerializeField] private TMP_Dropdown ResolutionSelection;
+
+    [SerializeField] private AudioMixerGroup SFXMixer;
 
     private void Awake()
     {
@@ -93,8 +100,38 @@ public class Settings : MonoBehaviour
 
         #endregion
 
+        #region SFXVolume
+
+        float sfxVolume = PlayerPrefs.GetFloat("SFXVolume", 0f);
+        SFXMixer.audioMixer.SetFloat("SFXVolume", Mathf.Log10(sfxVolume) * 20);
+        SFXVolumeSlider.value = sfxVolume;
+
+        SFXVolumeInput.text = (Mathf.InverseLerp(SFXVolumeSlider.minValue, SFXVolumeSlider.maxValue, sfxVolume) * 100).ToString("N0");
+
+        #endregion
+
         int poolSize = PlayerPrefs.GetInt("PooledObjects", 10000);
         PooledObjectsInput.text = poolSize.ToString();
+    }
+
+    public void ChangeSFXVolume(float volume)
+    {
+        SFXMixer.audioMixer.SetFloat("SFXVolume", Mathf.Log10(volume) * 20);
+        PlayerPrefs.SetFloat("SFXVolume", volume);
+        SFXVolumeInput.text = (Mathf.InverseLerp(SFXVolumeSlider.minValue, SFXVolumeSlider.maxValue, volume) * 100).ToString("N0");
+    }
+
+    public void ChangeSFXVolume(string volume)
+    {
+        int vol = Convert.ToInt32(volume);
+        if(vol < 0) vol = 0;
+        else if(vol > 100) vol = 100;
+        SFXVolumeInput.text = vol.ToString("N0");
+
+        float sliderValue = Mathf.Lerp(SFXVolumeSlider.minValue, SFXVolumeSlider.maxValue, vol / 100f);
+        SFXMixer.audioMixer.SetFloat("SFXVolume", Mathf.Log10(sliderValue) * 20);
+        PlayerPrefs.SetFloat("SFXVolume", sliderValue);
+        SFXVolumeSlider.value = sliderValue;
     }
 
     public void ChangePooledObjects(string input)

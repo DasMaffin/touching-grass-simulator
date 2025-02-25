@@ -181,7 +181,6 @@ public class InventoryManager : MonoBehaviour, IDataPersistence
                     newItem.slot = insertSlot;
                     insertSlot.isFull = true;
                     insertSlot.ItemInSlot = newItem;
-
                     newItem.myItem.GetComponent<InventoryItemController>().item = newItem;
                     break;
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
@@ -224,6 +223,7 @@ public class InventoryManager : MonoBehaviour, IDataPersistence
         inventoryItem.Owned += amount;
         while(inventoryItem.Owned > inventoryItem.MaxStackSize)
         {
+            insertSlot = null;
             InventoryItem newStack = new InventoryItem { Item = item };
             items.Add(newStack);
             newStack.Owned = Math.Clamp(inventoryItem.Owned - inventoryItem.MaxStackSize, 0, inventoryItem.MaxStackSize);

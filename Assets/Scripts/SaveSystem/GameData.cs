@@ -20,6 +20,7 @@ public class GameData
     }
 
     public float money;
+    public float water;
     public List<GrassBladeData> grassPlants;
     public List<InventorySlotData> inventorySlots;
 
@@ -27,6 +28,7 @@ public class GameData
     public GameData()
     {
         this.money = 0;
+        this.water = 100f;
         grassPlants = new List<GrassBladeData>();
         grassPlants.Add(new GrassBladeData
         {
