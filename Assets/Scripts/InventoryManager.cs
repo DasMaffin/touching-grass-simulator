@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.Profiling;
 using UnityEngine.UI;
 
+[System.Serializable]
 public class InventoryItem
 {
     private Item item;
@@ -119,7 +120,7 @@ public class InventoryItem
     }
 }
 
-public class InventoryManager : MonoBehaviour
+public class InventoryManager : MonoBehaviour, IDataPersistence
 {
     #region Singleton
 
@@ -147,6 +148,7 @@ public class InventoryManager : MonoBehaviour
     [SerializeField] private List<InventorySlotController> inventorySlots = new List<InventorySlotController>();
 
     private Dictionary<Item, Type> itemToType = new Dictionary<Item, Type>();
+    private InventorySlotController insertSlot;
 
     private void Awake()
     {
@@ -162,20 +164,23 @@ public class InventoryManager : MonoBehaviour
             switch(e.Action)
             {
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
-                    InventorySlotController slot = inventorySlots.FirstOrDefault(s => !s.isFull);
-                    if(slot == null)
+                    if(insertSlot == null)
                     {
-                        Debug.LogWarning("No free slots in inventory");
-                        return; 
+                        insertSlot = inventorySlots.FirstOrDefault(s => !s.isFull);
+                        if(insertSlot == null)
+                        {
+                            Debug.LogWarning("No free slots in inventory");
+                            return;
+                        }
                     }
                     InventoryItem newItem = (e.NewItems[0] as InventoryItem);
                     newItem.OnOwnedChanged += InventoryItemOwnedChanged;
                     newItem.OnMaxStacksizeChanged += InventoryItemStacksizeChanged;
-                    newItem.myItem = Instantiate(inventoryItemPrefab, slot.transform); // TODO create a pool of items
+                    newItem.myItem = Instantiate(inventoryItemPrefab, insertSlot.transform); // TODO create a pool of items
                     newItem.myItem.GetComponent<Image>().sprite = GameManager.Instance.itemSpriteMap[newItem.Item];
-                    newItem.slot = slot;
-                    slot.isFull = true;
-                    slot.ItemInSlot = newItem;
+                    newItem.slot = insertSlot;
+                    insertSlot.isFull = true;
+                    insertSlot.ItemInSlot = newItem;
 
                     newItem.myItem.GetComponent<InventoryItemController>().item = newItem;
                     break;
@@ -210,6 +215,7 @@ public class InventoryManager : MonoBehaviour
     public void AddItem(Item item, int amount)
     {
         InventoryItem inventoryItem = items.ToList().Find(i => i.Item == item && i.Owned < i.MaxStackSize);
+        insertSlot = null;
         if(inventoryItem == null) // If there is no item of this in the inventory or only full stacks
         {
             inventoryItem = new InventoryItem { Item = item };
@@ -223,6 +229,19 @@ public class InventoryManager : MonoBehaviour
             newStack.Owned = Math.Clamp(inventoryItem.Owned - inventoryItem.MaxStackSize, 0, inventoryItem.MaxStackSize);
             inventoryItem.Owned -= newStack.Owned;
         }
+    }
+
+    public void AddItem(Item item, int amount, InventorySlotController slot)
+    {
+        InventoryItem inventoryItem = new InventoryItem { Item = item };
+        insertSlot = slot;
+        items.Add(inventoryItem);
+        inventoryItem.Owned = amount;
+    }
+
+    public InventoryItem GetNonFullStack(Item item, bool inHotbar)
+    {
+        return items.ToList().FirstOrDefault(i => i.Item == item && i.Owned < i.maxStackSize && i.slot.isHotBar == inHotbar);
     }
 
     public void RemoveItem(Item item, int amount, InventoryItem inventoryItem)
@@ -284,5 +303,42 @@ public class InventoryManager : MonoBehaviour
         InventorySlotController slotController = inventorySlots[slot];
 
         return slotController.ItemInSlot;
+    }
+
+    public InventorySlotController GetFreeSlot(bool inHotbar)
+    {
+        return inventorySlots.FirstOrDefault(s => !s.isFull && s.isHotBar == inHotbar);
+    }
+
+    public InventorySlotController GetSlotByID(int id)
+    {
+        return inventorySlots[id];
+    }
+
+    public void LoadData(GameData data)
+    {
+        foreach(GameData.InventorySlotData item in data.inventorySlots)
+        {
+            if(item.InventoryItemItem == Item.None || item.InventoryItemOwned == 0) continue;
+            InventorySlotController slot = GetSlotByID(item.slotId);
+            AddItem(item.InventoryItemItem, item.InventoryItemOwned, slot);
+        }
+    }
+
+    public void SaveData(ref GameData data)
+    {
+        data.inventorySlots = new List<GameData.InventorySlotData>();
+        foreach(InventorySlotController slot in inventorySlots)
+        {
+            if(slot.ItemInSlot != null)
+            {
+                data.inventorySlots.Add(new GameData.InventorySlotData
+                {
+                    slotId = slot.slotId,
+                    InventoryItemItem = slot.ItemInSlot.Item,
+                    InventoryItemOwned = slot.ItemInSlot.Owned
+                });
+            }
+        }
     }
 }

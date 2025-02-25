@@ -32,7 +32,7 @@ public class CameraController : MonoBehaviour
     public void ChangeSensitivity(float sense)
     {
         mouseSensitivity = sense;
-        SettingsSave.Instance.SaveMouseSensitivity(sense);
+        Settings.Instance.SaveMouseSensitivity(sense);
     }
 
     private void RotateCamera()

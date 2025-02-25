@@ -25,6 +25,7 @@ public class InventoryItemController : MonoBehaviour, IPointerDownHandler, IPoin
 
     private Transform OGParent;
     private bool isDragging = false;
+    private bool shiftClicking = false;
 
     private void Start()
     {
@@ -34,10 +35,51 @@ public class InventoryItemController : MonoBehaviour, IPointerDownHandler, IPoin
     public void OnPointerDown(PointerEventData eventData)
     {
         if(isDragging) return;
-        isDragging = true;
         OGParent = this.transform.parent;
-        this.transform.SetParent(InventoryContainer.transform, false);
-        SelectedInstance = this;
+        if(shiftClicking)
+        {
+            while(this.item.Owned != 0)
+            {
+                InventoryItem iItem = InventoryManager.Instance.GetNonFullStack(this.item.Item, !OGParent.GetComponent<InventorySlotController>().isHotBar);
+                if(iItem != null)
+                {
+                    if(iItem.Owned + this.item.Owned > iItem.maxStackSize)
+                    {
+                        int diff = iItem.maxStackSize - iItem.Owned;
+                        iItem.Owned = iItem.maxStackSize;
+                        InventoryManager.Instance.RemoveItem(this.item.Item, diff, this.item);
+                    }
+                    else
+                    {
+                        iItem.Owned += this.item.Owned;
+                        InventoryManager.Instance.RemoveItem(this.item.Item, this.item.Owned, this.item);
+                        return;
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+            InventorySlotController isc = InventoryManager.Instance.GetFreeSlot(!OGParent.GetComponent<InventorySlotController>().isHotBar);
+            OGParent.GetComponent<InventorySlotController>().isFull = false;
+            OGParent.GetComponent<InventorySlotController>().ItemInSlot = null;
+            isc.isFull = true;
+            isc.ItemInSlot = item;
+            item.slot = isc;
+            this.transform.SetParent(isc.transform, false);
+
+            if(isc.slotId == InventoryBarManager.Instance.ActiveSlot + 40)
+            {
+                isc.ItemInSlot.Select();
+            }
+        }
+        else
+        {
+            isDragging = true;
+            this.transform.SetParent(InventoryContainer.transform, false);
+            SelectedInstance = this;
+        }
     }
 
     public void OnPointerUp(PointerEventData eventData)
@@ -46,32 +88,51 @@ public class InventoryItemController : MonoBehaviour, IPointerDownHandler, IPoin
         SelectedInstance = null;
         isDragging = false;
         this.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-        GameObject hoveredElement = GetHoveredUIElement();
+        GameObject hoveredElement = GetHoveredUIElement("InventorySlot");
 
         if (hoveredElement != null && hoveredElement != OGParent.gameObject && hoveredElement.layer == LayerMask.NameToLayer("InventorySlot"))
         {
-            if(OGParent.GetComponent<InventorySlotController>().isHotBar && OGParent.GetComponent<InventorySlotController>().slotId == InventoryBarManager.Instance.ActiveSlot + 40)
-            {
-                item.Deselect();
-            }            
-            this.transform.SetParent(hoveredElement.transform, false);
-            if(hoveredElement.GetComponent<InventorySlotController>().isHotBar && hoveredElement.GetComponent<InventorySlotController>().slotId == InventoryBarManager.Instance.ActiveSlot + 40)
-            {
-                item.Select();
-            }
-
             InventorySlotController isc = hoveredElement.GetComponent<InventorySlotController>();
-            isc.isFull = true;
-            isc.ItemInSlot = item;
-            item.slot = isc;
-            OGParent.GetComponent<InventorySlotController>().isFull = false;
-            OGParent.GetComponent<InventorySlotController>().ItemInSlot = null;
+
+            if(isc != null && isc.ItemInSlot != null && isc.ItemInSlot.Item == this.item.Item)
+            {
+                if(isc.ItemInSlot.Owned + item.Owned > item.maxStackSize)
+                {
+                    InventoryManager.Instance.RemoveItem(item.Item, isc.ItemInSlot.maxStackSize - isc.ItemInSlot.Owned, item);
+                    isc.ItemInSlot.Owned = isc.ItemInSlot.maxStackSize;
+                }
+                else
+                {
+                    isc.ItemInSlot.Owned += item.Owned;
+                    InventoryManager.Instance.RemoveItem(item.Item, item.Owned, item);
+                }
+                this.transform.SetParent(OGParent, false);
+                return;
+            }
+            else
+            {
+                if(OGParent.GetComponent<InventorySlotController>().isHotBar && OGParent.GetComponent<InventorySlotController>().slotId == InventoryBarManager.Instance.ActiveSlot + 40)
+                {
+                    item.Deselect();
+                }
+                this.transform.SetParent(hoveredElement.transform, false);
+                if(hoveredElement.GetComponent<InventorySlotController>().isHotBar && hoveredElement.GetComponent<InventorySlotController>().slotId == InventoryBarManager.Instance.ActiveSlot + 40)
+                {
+                    item.Select();
+                }
+
+                isc.isFull = true;
+                isc.ItemInSlot = item;
+                item.slot = isc;
+                OGParent.GetComponent<InventorySlotController>().isFull = false;
+                OGParent.GetComponent<InventorySlotController>().ItemInSlot = null;
+            }
         }
         else
         {
             this.transform.SetParent(OGParent, false);
         }
-
+        
         foreach(Transform sibling in GetSiblings(transform))
         {
             if(sibling.tag == "IgnoreInventory")
@@ -111,7 +172,7 @@ public class InventoryItemController : MonoBehaviour, IPointerDownHandler, IPoin
         return siblings;
     }
 
-    public static GameObject GetHoveredUIElement()
+    public static GameObject GetHoveredUIElement(string layerName)
     {
         PointerEventData pointerData = new PointerEventData(EventSystem.current)
         {
@@ -122,7 +183,7 @@ public class InventoryItemController : MonoBehaviour, IPointerDownHandler, IPoin
         EventSystem.current.RaycastAll(pointerData, results);
         foreach(RaycastResult result in results)
         {
-            if(result.gameObject.layer == LayerMask.NameToLayer("InventorySlot"))
+            if(result.gameObject.layer == LayerMask.NameToLayer(layerName))
             {
                 return result.gameObject;
             }
@@ -134,7 +195,7 @@ public class InventoryItemController : MonoBehaviour, IPointerDownHandler, IPoin
     private bool firstUpdate = true;
     private void Update()
     {
-        if(firstUpdate)
+        if(this.GetComponent<RectTransform>().sizeDelta.x == 0)
         {
             this.GetComponent<RectTransform>().sizeDelta = this.transform.parent.GetComponentInParent<RectTransform>().sizeDelta * 0.9f; // TODO Refactor the GetComponents out.
             firstUpdate = false;
@@ -142,6 +203,14 @@ public class InventoryItemController : MonoBehaviour, IPointerDownHandler, IPoin
         if(isDragging)
         {
             this.transform.position = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10);
+        }
+        if(Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            shiftClicking = true;
+        }
+        else if(Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            shiftClicking = false;
         }
     }
 }

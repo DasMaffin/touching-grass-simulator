@@ -44,6 +44,6 @@ public class GrassSkinSelector : MonoBehaviour, IPointerClickHandler
     {
         GameManager.Instance.selectedGrassSkin = myIndex;
         OnSelectedChanged?.Invoke(myIndex);
-        SettingsSave.Instance.SaveSelectedSkin(myIndex);
+        Settings.Instance.SaveSelectedSkin(myIndex);
     }
 }

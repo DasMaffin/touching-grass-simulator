@@ -3,6 +3,7 @@ using System;
 using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine.Pool;
+using UnityEngine.Windows;
 
 public class Player
 {
@@ -48,7 +49,7 @@ public class Player
     }
 }
 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviour, IDataPersistence
 {
     #region Singleton
 
@@ -84,6 +85,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Sprite wateringCanSprite;
 
     private Dictionary<GameObject, GrassBladeController> grassCache = new Dictionary<GameObject, GrassBladeController>();
+    private List<GrassBladeController> activeGrassBlades = new List<GrassBladeController>();
 
     void Awake()
     {
@@ -100,9 +102,16 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        InventoryManager.Instance.AddItem(Item.WateringCan, 1);
-        player.Money = 10000f;
         player.AvailableWater = 100f;
+    }
+
+    public void ChangePoolSize(int input)
+    {
+        foreach(var pool in grassPools)
+        {
+            pool.Clear(); // Ensure Unity's ObjectPool clears its stored instances
+        }
+        grassPools.Clear();
 
         for(int i = 0; i < grassSkins.Length; i++)
         {
@@ -116,7 +125,11 @@ public class GameManager : MonoBehaviour
                     grassCache[go] = gbc;
                     return go;
                 },
-                go => go.SetActive(true),
+                go =>
+                {
+                    go.SetActive(true);
+                    activeGrassBlades.Add(grassCache[go]);
+                },
                 go =>
                 {
                     if(!grassCache.TryGetValue(go, out GrassBladeController gbc))
@@ -129,13 +142,23 @@ public class GameManager : MonoBehaviour
                     gbc.daisies = 0;
                     gbc.OnHoverExit();
                     go.transform.localScale = new Vector3(gbc.currentSize, gbc.currentSize, gbc.currentSize);
+                    activeGrassBlades.Remove(grassCache[go]);
                     go.SetActive(false);
                 },
                 go => Destroy(go),
-                false,
-                10000,
-                100000
+            false,
+                input,
+                input * 10
             ));
+
+            for(int j = 0; j < input; j++)
+            {
+                GameObject go = Instantiate(grassSkins[index]);
+                GrassBladeController gbc = go.GetComponent<GrassBladeController>();
+                gbc.selectedGrassSkin = index;
+                grassCache[go] = gbc;
+                grassPools[i].Release(go);
+            }
         }
     }
 
@@ -144,12 +167,36 @@ public class GameManager : MonoBehaviour
         player.UseWateringCan();
     }
 
-    internal void InstantiateGrass(Vector3 location)
+    internal GameObject InstantiateGrass(Vector3 location)
     {
         GameObject grass = grassPools[selectedGrassSkin].Get();
         grass.transform.position = location;
         grass.transform.rotation = Quaternion.identity;
+        return grass;
+    }
 
+    public void LoadData(GameData data)
+    {
+        this.player.Money = data.money;
+        foreach(GameData.GrassBladeData gbd in data.grassPlants)
+        {
+            GrassBladeController gbc = InstantiateGrass(gbd.location).GetComponent<GrassBladeController>();
+            gbc.currentSize = gbd.currentSize;
+        }
+    }
+
+    public void SaveData(ref GameData data)
+    {
+        data.money = this.player.Money;
+        data.grassPlants = new List<GameData.GrassBladeData>();
+        foreach(GrassBladeController gbc in activeGrassBlades)
+        {
+            data.grassPlants.Add(new GameData.GrassBladeData
+            {
+                location = gbc.transform.position,
+                currentSize = gbc.currentSize
+            });
+        }
     }
 
     public void QuitGame()
