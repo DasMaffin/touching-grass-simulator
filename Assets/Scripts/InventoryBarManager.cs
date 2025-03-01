@@ -79,7 +79,7 @@ public class InventoryBarManager : MonoBehaviour
         {
             go.SlotDecoration.SetActive(false);
         }
-        Slots[activeSlot].SlotDecoration.SetActive(true);
+        ActiveSlot = 0;
     }
 
     private void Update()

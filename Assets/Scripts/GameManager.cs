@@ -109,7 +109,6 @@ public class GameManager : MonoBehaviour, IDataPersistence
         #region SFXVolume
 
         float sfxVolume = PlayerPrefs.GetFloat("SFXVolume", .5f);
-        print(sfxVolume);
         Settings.Instance.SFXMixer.audioMixer.SetFloat("SFXVolume", Mathf.Log10(sfxVolume) * 20);
         Settings.Instance.SFXVolumeSlider.value = sfxVolume;
         Settings.Instance.SFXVolumeInput.text = (Mathf.InverseLerp(Settings.Instance.SFXVolumeSlider.minValue, Settings.Instance.SFXVolumeSlider.maxValue, sfxVolume) * 100).ToString("N0");
