@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Localization-String-Tables-Sinhala (Sri Lanka) (si-LK)
+  m_EditorClassIdentifier: 
+  m_GroupName: Localization-String-Tables-Sinhala (Sri Lanka) (si-LK)
+  m_GUID: 0c9b7eb488e81f343b84240ab534979c
+  m_SerializeEntries: []
+  m_ReadOnly: 1
+  m_Settings: {fileID: 11400000, guid: 399b176c0e595284898d14560b51c8da, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 8ace927546394814688acb8b7883d491, type: 2}
+    - {fileID: 11400000, guid: 53fc6559f90c60d4a930189d23079b15, type: 2}

@@ -36,17 +36,19 @@ public class Settings : MonoBehaviour
 
     #endregion
 
+    public Action onChangeResolution;
+
     [SerializeField] private Slider FramerateSlider;
-    [SerializeField] private Slider SFXVolumeSlider;
+    [SerializeField] public Slider SFXVolumeSlider;
 
     [SerializeField] private TMP_InputField FrameInput;
     [SerializeField] private TMP_InputField PooledObjectsInput;
-    [SerializeField] private TMP_InputField SFXVolumeInput;
+    [SerializeField] public TMP_InputField SFXVolumeInput;
 
     [SerializeField] private TMP_Dropdown FullScreenSelection;
     [SerializeField] private TMP_Dropdown ResolutionSelection;
 
-    [SerializeField] private AudioMixerGroup SFXMixer;
+    [SerializeField] public AudioMixerGroup SFXMixer;
 
     private void Awake()
     {
@@ -100,16 +102,6 @@ public class Settings : MonoBehaviour
 
         #endregion
 
-        #region SFXVolume
-
-        float sfxVolume = PlayerPrefs.GetFloat("SFXVolume", 0f);
-        SFXMixer.audioMixer.SetFloat("SFXVolume", Mathf.Log10(sfxVolume) * 20);
-        SFXVolumeSlider.value = sfxVolume;
-
-        SFXVolumeInput.text = (Mathf.InverseLerp(SFXVolumeSlider.minValue, SFXVolumeSlider.maxValue, sfxVolume) * 100).ToString("N0");
-
-        #endregion
-
         int poolSize = PlayerPrefs.GetInt("PooledObjects", 10000);
         PooledObjectsInput.text = poolSize.ToString();
     }
@@ -147,12 +139,14 @@ public class Settings : MonoBehaviour
         PlayerPrefs.SetInt("ResolutionWidth", Screen.resolutions[index].width);
         PlayerPrefs.SetInt("ResolutionHeight", Screen.resolutions[index].height);
         Screen.SetResolution(Screen.resolutions[index].width, Screen.resolutions[index].height, Screen.fullScreenMode);
+        onChangeResolution?.Invoke();
     }
 
     public void ChangeFullScreenMode(int index)
     {
         Screen.fullScreenMode = (FullScreenMode)index; 
         PlayerPrefs.SetInt("FullScreenMode", index);
+        onChangeResolution?.Invoke();
     }
 
     public void SetMaxFramerate(float framerate)

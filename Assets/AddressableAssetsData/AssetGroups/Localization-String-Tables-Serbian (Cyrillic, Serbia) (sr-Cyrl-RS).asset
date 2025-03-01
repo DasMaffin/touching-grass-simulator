@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Localization-String-Tables-Serbian (Cyrillic, Serbia) (sr-Cyrl-RS)
+  m_EditorClassIdentifier: 
+  m_GroupName: Localization-String-Tables-Serbian (Cyrillic, Serbia) (sr-Cyrl-RS)
+  m_GUID: 2a68e5c44ff47064896f6eaf433335fe
+  m_SerializeEntries: []
+  m_ReadOnly: 1
+  m_Settings: {fileID: 11400000, guid: 399b176c0e595284898d14560b51c8da, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 70e3607e6c695864fbaab876e4547f45, type: 2}
+    - {fileID: 11400000, guid: 0ff64847327ba0d43904e7de03af9ef9, type: 2}

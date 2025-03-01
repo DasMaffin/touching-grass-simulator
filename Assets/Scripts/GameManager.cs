@@ -4,6 +4,8 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine.Pool;
 using UnityEngine.Windows;
+using Unity.Collections;
+using Unity.Jobs;
 
 public class Player
 {
@@ -76,6 +78,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
     public GameObject[] grassSkins;
     public Dictionary<Item, Sprite> itemSpriteMap;
     public List<ObjectPool<GameObject>> grassPools = new List<ObjectPool<GameObject>>();
+    public List<GrassBladeController> activeGrassBlades = new List<GrassBladeController>();
 
     [HideInInspector] public int selectedGrassSkin;
 
@@ -85,7 +88,6 @@ public class GameManager : MonoBehaviour, IDataPersistence
     [SerializeField] private Sprite wateringCanSprite;
 
     private Dictionary<GameObject, GrassBladeController> grassCache = new Dictionary<GameObject, GrassBladeController>();
-    private List<GrassBladeController> activeGrassBlades = new List<GrassBladeController>();
 
     void Awake()
     {
@@ -103,6 +105,16 @@ public class GameManager : MonoBehaviour, IDataPersistence
     private void Start()
     {
         player.AvailableWater = 100f;
+
+        #region SFXVolume
+
+        float sfxVolume = PlayerPrefs.GetFloat("SFXVolume", .5f);
+        print(sfxVolume);
+        Settings.Instance.SFXMixer.audioMixer.SetFloat("SFXVolume", Mathf.Log10(sfxVolume) * 20);
+        Settings.Instance.SFXVolumeSlider.value = sfxVolume;
+        Settings.Instance.SFXVolumeInput.text = (Mathf.InverseLerp(Settings.Instance.SFXVolumeSlider.minValue, Settings.Instance.SFXVolumeSlider.maxValue, sfxVolume) * 100).ToString("N0");
+
+        #endregion
     }
 
     public void ChangePoolSize(int input)
@@ -127,8 +139,8 @@ public class GameManager : MonoBehaviour, IDataPersistence
                 },
                 go =>
                 {
-                    go.SetActive(true);
                     activeGrassBlades.Add(grassCache[go]);
+                    go.SetActive(true);
                 },
                 go =>
                 {

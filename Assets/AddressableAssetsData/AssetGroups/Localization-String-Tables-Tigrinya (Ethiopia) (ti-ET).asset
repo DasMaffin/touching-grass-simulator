@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Localization-String-Tables-Tigrinya (Ethiopia) (ti-ET)
+  m_EditorClassIdentifier: 
+  m_GroupName: Localization-String-Tables-Tigrinya (Ethiopia) (ti-ET)
+  m_GUID: 6613b0f95db056a42a9c6a8846a74191
+  m_SerializeEntries: []
+  m_ReadOnly: 1
+  m_Settings: {fileID: 11400000, guid: 399b176c0e595284898d14560b51c8da, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 4f02e11ac54efea42b4d5398cc941b48, type: 2}
+    - {fileID: 11400000, guid: de39c5e8584b7e345b9a816671355c37, type: 2}

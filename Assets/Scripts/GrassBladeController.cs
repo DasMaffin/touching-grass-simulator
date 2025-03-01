@@ -1,8 +1,7 @@
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 public class GrassBladeController : Interactible
 {
@@ -15,13 +14,13 @@ public class GrassBladeController : Interactible
 
     #endregion
 
+    public float growSpeed = 0.01f;
     public int selectedGrassSkin = 0;
+    public float wateredMultiplier = 10.0f;
 
     private float desiredSize = 1f;
-    private float growSpeed = 0.01f;
-    private float wateredMultiplier = 10.0f;
-
     private int enteredWaters = 0;
+
     private bool FinishedGrowing { get { return currentSize >= desiredSize; } }
 
     private new void Awake()
@@ -30,33 +29,45 @@ public class GrassBladeController : Interactible
 
         base.Awake();
     }
-
-    private void Update()
+    private void OnEnable()
     {
-        if(currentSize < 1f)
-        {
-            float weatherMult = WeatherManager.Instance.GetGrowthMultiplier(watered);
-            if(weatherMult == -1)
-            {
-                return;
-            }
-            print("Intended Growth multiplier: " + WeatherManager.Instance.GetGrowthMultiplier(enteredWaters != 0));
-            print("Actual Growth speed: " + growSpeed);
-            if(watered)
-            {
-                currentSize += growSpeed * Time.deltaTime * wateredMultiplier * weatherMult;
-            }
-            else
-            {
-                currentSize += growSpeed * Time.deltaTime * weatherMult;
-            }
-        }
-        else
-        {
-            currentSize = 1f;
-        }
-        this.transform.localScale = new Vector3(currentSize, currentSize, currentSize);
+        GrassBladeManager.Instance?.RegisterBlade(this);
+        UpdateScale();
     }
+
+    private void OnDisable()
+    {
+        GrassBladeManager.Instance?.UnregisterBlade(this);
+    }
+    public void UpdateScale()
+    {
+        transform.localScale = new Vector3(currentSize, currentSize, currentSize);
+    }
+
+    //private void Update()
+    //{
+    //    if(currentSize < 1f)
+    //    {
+    //        float weatherMult = WeatherManager.Instance.GetGrowthMultiplier(watered);
+    //        if(weatherMult == -1)
+    //        {
+    //            return;
+    //        }
+    //        if(watered)
+    //        {
+    //            currentSize += growSpeed * Time.deltaTime * wateredMultiplier * weatherMult;
+    //        }
+    //        else
+    //        {
+    //            currentSize += growSpeed * Time.deltaTime * weatherMult;
+    //        }
+    //    }
+    //    else
+    //    {
+    //        currentSize = 1f;
+    //    }
+    //    this.transform.localScale = new Vector3(currentSize, currentSize, currentSize);
+    //}
 
     private void OnTriggerEnter(Collider other)
     {
@@ -67,12 +78,12 @@ public class GrassBladeController : Interactible
         }
         switch(other.gameObject.GetComponent<FlowerController>()?.Flower)
         {
-            case Flower.Daisy:
+            case FlowerType.Daisy:
                 daisies++;
                 break;
-            case Flower.Dandelion:
+            case FlowerType.Dandelion:
                 break;
-            case Flower.None:
+            case FlowerType.None:
                 break;
         }
     }
@@ -110,6 +121,6 @@ public class GrassBladeController : Interactible
             GameManager.Instance.ITT.RemoveGrassBlade(this.transform.position.x, this.transform.position.y, this.transform.position.z);
 
             GameManager.Instance.grassPools[selectedGrassSkin].Release(this.gameObject);
-        }
+        }        
     }
 }

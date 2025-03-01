@@ -1,6 +1,7 @@
 using DigitalRuby.RainMaker;
 using System;
-using System.Runtime.CompilerServices;
+using Unity.Collections;
+using Unity.Entities;
 using UnityEngine;
 
 public class WeatherManager : MonoBehaviour
@@ -27,6 +28,7 @@ public class WeatherManager : MonoBehaviour
     }
 
     #endregion
+
     // rs.RainIntensity:
     // 0.0 - 0.32999... = Light
     // 0.33 - 0,66999... = medium
@@ -61,7 +63,7 @@ public class WeatherManager : MonoBehaviour
     public float GetGrowthMultiplier(bool isWatered, float rainIntensity = -1)
     {
         if(rainIntensity == -1) rainIntensity = rs.RainIntensity;
-        print("Rain intensity: " + rainIntensity);
+
         if(isWatered)
         {
             if(rainIntensity > 0.67f) return -1f; // Drown
@@ -76,6 +78,7 @@ public class WeatherManager : MonoBehaviour
             return 1f + (10f - 1f) * (rainIntensity / 0.5f); // 1x to 10x growth
         }
     }
+
 
     private void Awake()
     {
@@ -109,6 +112,14 @@ public class WeatherManager : MonoBehaviour
             default:
                 break;
         }
+
+        EntityManager entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+
+        Entity weatherEntity = entityManager.CreateEntityQuery(typeof(WeatherComponent)).GetSingletonEntity();
+        WeatherComponent weatherComponent = entityManager.GetComponentData<WeatherComponent>(weatherEntity);
+
+        weatherComponent.rainIntensity = rs.RainIntensity;
+        entityManager.SetComponentData(weatherEntity, weatherComponent);
     }
 
     private void ChangeWeather()

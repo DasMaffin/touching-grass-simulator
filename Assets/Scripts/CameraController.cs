@@ -1,3 +1,10 @@
+using System.Security.Principal;
+using Unity.Collections;
+using Unity.Entities;
+using Unity.Mathematics;
+using Unity.Physics;
+using Unity.Physics.Systems;
+using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -50,15 +57,15 @@ public class CameraController : MonoBehaviour
 
         transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
     }
-    
+
     private Interactible lastObject = null;
     public LayerMask layersToCheck; // Variable for selected layers
     public float rayDistance = 10f; // Variable for ray distance
     private void Interact()
     {
         Vector3 screenCenter = new Vector3(Screen.width / 2f, Screen.height / 2f, 0f);
-        Ray ray = Camera.main.ScreenPointToRay(screenCenter);
-        RaycastHit hit;
+        UnityEngine.Ray ray = Camera.main.ScreenPointToRay(screenCenter);
+        UnityEngine.RaycastHit hit;
         bool hitObj = Physics.Raycast(ray, out hit, rayDistance, layersToCheck);
         Interactible i = hit.collider?.gameObject.GetComponent<Interactible>();
 
@@ -74,10 +81,42 @@ public class CameraController : MonoBehaviour
             lastObject = i;
             lastObject.OnHoverEnter();
         }
-
         if(Input.GetKeyDown(KeyCode.Mouse0) && lastObject != null)
         {
             lastObject.onInteract();
         }
     }
+
+    //private void InteractECS()
+    //{
+    //    EntityManager entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+    //    PhysicsWorldSingleton physicsWorldSingleton = new EntityQueryBuilder(Allocator.Temp).WithAll<PhysicsWorldSingleton>().Build(entityManager).GetSingleton<PhysicsWorldSingleton>();
+    //    CollisionWorld collisionWorld = physicsWorldSingleton.CollisionWorld;
+
+    //    float3 startPos = Camera.main.transform.position;
+    //    float3 direction = Camera.main.transform.forward * 100;
+    //    float3 endPos = startPos + direction;
+
+    //    RaycastInput input = new()
+    //    {
+    //        Start = startPos,
+    //        End = endPos,
+    //        Filter = new CollisionFilter
+    //        {
+    //            BelongsTo = (uint)CollisionLayers.PlayerRay,
+    //            CollidesWith = (uint)CollisionLayers.Enemy,
+    //            GroupIndex = 0
+    //        }
+    //    };
+
+    //    if(collisionWorld.CastRay(input, out Unity.Physics.RaycastHit rayCastHit))
+    //    {
+    //        if(entityManager.HasComponent<GrassComponent>(rayCastHit.Entity))
+    //        {
+    //            Debug.Log("Enemy hit in object code!");
+
+    //            entityManager.GetComponentData<GrassComponent>(rayCastHit.Entity);
+    //        }
+    //    }
+    //}
 }

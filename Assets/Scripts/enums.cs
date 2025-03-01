@@ -1,4 +1,4 @@
-public enum Flower
+public enum FlowerType
 {
     None = 0,
     Daisy = 1,

@@ -112,17 +112,16 @@ public class InteractiveTerrainTexture : MonoBehaviour
     {
         Vector3 hitPoint = new Vector3(x, y, z);
 
+        // Convert world position to alpha map indices
         Vector3 terrainPosition = new Vector3(x, 0, z) - terrain.transform.position;
-        x = Mathf.RoundToInt((terrainPosition.x / terrainData.size.x) * alphamapWidth);
-        z = Mathf.RoundToInt((terrainPosition.z / terrainData.size.z) * alphamapHeight);
-        // Get the alpha map
-        float[,,] alphaMaps = terrainData.GetAlphamaps(0, 0, alphamapWidth, alphamapHeight);
+        int xIndex = Mathf.RoundToInt((terrainPosition.x / terrainData.size.x) * alphamapWidth);
+        int zIndex = Mathf.RoundToInt((terrainPosition.z / terrainData.size.z) * alphamapHeight);
 
-        // Apply the change only to the clicked position
-        if(x >= 0 && x < alphamapWidth && z >= 0 && z < alphamapHeight)
+        if(xIndex >= 0 && xIndex < alphamapWidth && zIndex >= 0 && zIndex < alphamapHeight)
         {
             int mapToUseIndex = 0;
-            foreach(Collider collider in Physics.OverlapSphere(hitPoint, 0.1f, ~0, QueryTriggerInteraction.Collide))
+
+            foreach(Collider collider in Physics.OverlapSphere(hitPoint, 0.1f, ~(1 << 8), QueryTriggerInteraction.Collide))
             {
                 if(collider.gameObject.layer == LayerMask.NameToLayer("Watered") && collider.gameObject.name != "WateringCanWateringArea")
                 {
@@ -130,16 +129,20 @@ public class InteractiveTerrainTexture : MonoBehaviour
                     break;
                 }
             }
-            // Update the transition layer (layer 1) based on grass presence
-            alphaMaps[(int)z, (int)x, 1] = Mathf.Clamp01(alphaMaps[(int)z, (int)x, 1] + changeAmount);
+
+            // Get the current alpha values for this specific position
+            float[,,] singleAlpha = terrainData.GetAlphamaps(xIndex, zIndex, 1, 1);
+
+            // Apply modifications
+            singleAlpha[0, 0, 1] = Mathf.Clamp01(singleAlpha[0, 0, 1] + changeAmount);
 
             // Normalize layers to ensure the sum is 1
-            float total = alphaMaps[(int)z, (int)x, mapToUseIndex] + alphaMaps[(int)z, (int)x, 1];
-            alphaMaps[(int)z, (int)x, mapToUseIndex] = Mathf.Clamp01(alphaMaps[(int)z, (int)x, mapToUseIndex] + (1.0f - total));
-            alphaMaps[(int)z, (int)x, 1] = Mathf.Clamp01(alphaMaps[(int)z, (int)x, 1]);
+            float total = singleAlpha[0, 0, mapToUseIndex] + singleAlpha[0, 0, 1];
+            singleAlpha[0, 0, mapToUseIndex] = Mathf.Clamp01(singleAlpha[0, 0, mapToUseIndex] + (1.0f - total));
+            singleAlpha[0, 0, 1] = Mathf.Clamp01(singleAlpha[0, 0, 1]);
 
-            // Apply the modified alpha map back to the terrain
-            terrainData.SetAlphamaps(0, 0, alphaMaps);
+            // Update only the affected pixel instead of the whole map
+            terrainData.SetAlphamaps(xIndex, zIndex, singleAlpha);
         }
     }
 }

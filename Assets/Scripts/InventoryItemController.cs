@@ -192,13 +192,11 @@ public class InventoryItemController : MonoBehaviour, IPointerDownHandler, IPoin
         return null;
     }
 
-    private bool firstUpdate = true;
     private void Update()
     {
         if(this.GetComponent<RectTransform>().sizeDelta.x == 0)
         {
             this.GetComponent<RectTransform>().sizeDelta = this.transform.parent.GetComponentInParent<RectTransform>().sizeDelta * 0.9f; // TODO Refactor the GetComponents out.
-            firstUpdate = false;
         }
         if(isDragging)
         {

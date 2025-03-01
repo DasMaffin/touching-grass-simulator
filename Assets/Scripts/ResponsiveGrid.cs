@@ -21,6 +21,7 @@ public class ResponsiveGrid : MonoBehaviour
             rows = gridLayout.constraintCount;
         }
         AdjustCellSize();
+        Settings.Instance.onChangeResolution += AdjustCellSize;
     }
 
     void AdjustCellSize()

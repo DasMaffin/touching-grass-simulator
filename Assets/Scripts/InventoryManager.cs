@@ -1,12 +1,9 @@
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using TMPro;
-using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
-using UnityEngine.Profiling;
 using UnityEngine.UI;
 
 [System.Serializable]
@@ -70,7 +67,6 @@ public class InventoryItem
                 break;
             case Item.GrassBlades:
             default:
-                Debug.Log("This item cant be used.");
                 break;
         }
     }
@@ -99,7 +95,6 @@ public class InventoryItem
             case Item.GrassBlades:
             case Item.GrassSeeds:
             default:
-                Debug.Log($"Item \"{Item}\" Selected!");
                 break;
         }
     }
@@ -114,7 +109,6 @@ public class InventoryItem
             case Item.GrassBlades:
             case Item.GrassSeeds:
             default:
-                Debug.Log($"Item \"{Item}\" deselected!");
                 break;
         }
     }
