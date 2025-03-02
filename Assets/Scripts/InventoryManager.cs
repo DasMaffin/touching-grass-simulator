@@ -55,12 +55,7 @@ public class InventoryItem
         switch(Item)
         {
             case Item.GrassSeeds:
-                LayerMask layersToCheck = (1 << 0) | (1 << 1) | (1 << 8); // 1 << layer
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                if(Physics.Raycast(ray, out RaycastHit hit, 4, layersToCheck))
-                {
-                    GameManager.Instance.ITT.HandleGrassBlade(hit, this);
-                }
+                GrassPreviewController.ActiveController.PlantGrass(this);
                 break;
             case Item.WateringCan:
                 PlayerController.Instance.UseWateringCan();
@@ -91,9 +86,13 @@ public class InventoryItem
         {
             case Item.WateringCan:
                 PlayerController.Instance.SelectWateringCan();
+                CameraController.Instance.canInteract = false;
+                break;
+            case Item.GrassSeeds:
+                GameManager.Instance.grassSkins[GameManager.Instance.selectedGrassSkin].preview.SetActive(true);
+                CameraController.Instance.canInteract = false;
                 break;
             case Item.GrassBlades:
-            case Item.GrassSeeds:
             default:
                 break;
         }
@@ -105,9 +104,13 @@ public class InventoryItem
         {
             case Item.WateringCan:
                 PlayerController.Instance.DeselectWateringCan();
+                CameraController.Instance.canInteract = true;
+                break;
+            case Item.GrassSeeds:
+                GameManager.Instance.grassSkins[GameManager.Instance.selectedGrassSkin].preview.SetActive(false);
+                CameraController.Instance.canInteract = true;
                 break;
             case Item.GrassBlades:
-            case Item.GrassSeeds:
             default:
                 break;
         }

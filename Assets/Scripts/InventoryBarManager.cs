@@ -84,6 +84,7 @@ public class InventoryBarManager : MonoBehaviour
 
     private void Update()
     {
+        if(GameManager.Instance.menuHistory.Count > 0) return;
         float scroll = Input.GetAxis("Mouse ScrollWheel");
 
         if(scroll < 0)

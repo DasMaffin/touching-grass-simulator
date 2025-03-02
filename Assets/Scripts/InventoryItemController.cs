@@ -194,10 +194,8 @@ public class InventoryItemController : MonoBehaviour, IPointerDownHandler, IPoin
 
     private void Update()
     {
-        if(this.GetComponent<RectTransform>().sizeDelta.x == 0)
-        {
+        if(!isDragging)
             this.GetComponent<RectTransform>().sizeDelta = this.transform.parent.GetComponentInParent<RectTransform>().sizeDelta * 0.9f; // TODO Refactor the GetComponents out.
-        }
         if(isDragging)
         {
             this.transform.position = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10);

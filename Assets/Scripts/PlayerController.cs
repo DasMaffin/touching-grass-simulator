@@ -55,6 +55,7 @@ public class PlayerController : MonoBehaviour
 
     public void DeselectWateringCan()
     {
+        StopUsingWateringCan();
         wateringCanUI.SetActive(false);
         wateringCan.SetActive(false);
     }

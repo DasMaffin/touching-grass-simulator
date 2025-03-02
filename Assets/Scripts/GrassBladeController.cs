@@ -17,6 +17,7 @@ public class GrassBladeController : Interactible
     public float growSpeed = 0.01f;
     public int selectedGrassSkin = 0;
     public float wateredMultiplier = 10.0f;
+    public Transform growObject;
 
     private float desiredSize = 1f;
     private int enteredWaters = 0;
@@ -25,7 +26,7 @@ public class GrassBladeController : Interactible
 
     private new void Awake()
     {
-        this.transform.localScale = new Vector3(currentSize, currentSize, currentSize);
+        this.growObject.localScale = new Vector3(currentSize, currentSize, currentSize);
 
         base.Awake();
     }
@@ -41,33 +42,8 @@ public class GrassBladeController : Interactible
     }
     public void UpdateScale()
     {
-        transform.localScale = new Vector3(currentSize, currentSize, currentSize);
+        growObject.localScale = new Vector3(currentSize, currentSize, currentSize);
     }
-
-    //private void Update()
-    //{
-    //    if(currentSize < 1f)
-    //    {
-    //        float weatherMult = WeatherManager.Instance.GetGrowthMultiplier(watered);
-    //        if(weatherMult == -1)
-    //        {
-    //            return;
-    //        }
-    //        if(watered)
-    //        {
-    //            currentSize += growSpeed * Time.deltaTime * wateredMultiplier * weatherMult;
-    //        }
-    //        else
-    //        {
-    //            currentSize += growSpeed * Time.deltaTime * weatherMult;
-    //        }
-    //    }
-    //    else
-    //    {
-    //        currentSize = 1f;
-    //    }
-    //    this.transform.localScale = new Vector3(currentSize, currentSize, currentSize);
-    //}
 
     private void OnTriggerEnter(Collider other)
     {

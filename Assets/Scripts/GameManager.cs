@@ -51,6 +51,13 @@ public class Player
     }
 }
 
+[System.Serializable]
+public class GrassSkin
+{
+    public GameObject skin;
+    public GameObject preview;
+}
+
 public class GameManager : MonoBehaviour, IDataPersistence
 {
     #region Singleton
@@ -73,13 +80,13 @@ public class GameManager : MonoBehaviour, IDataPersistence
     #endregion
 
     public InteractiveTerrainTexture ITT;
-    public Stack<GameObject> menuHistory = new Stack<GameObject>();
-    public Player player;
-    public GameObject[] grassSkins;
-    public Dictionary<Item, Sprite> itemSpriteMap;
-    public List<ObjectPool<GameObject>> grassPools = new List<ObjectPool<GameObject>>();
+    public GrassSkin[] grassSkins;
     public List<GrassBladeController> activeGrassBlades = new List<GrassBladeController>();
 
+    [HideInInspector] public Player player;
+    [HideInInspector] public Dictionary<Item, Sprite> itemSpriteMap;
+    [HideInInspector] public List<ObjectPool<GameObject>> grassPools = new List<ObjectPool<GameObject>>();
+    [HideInInspector] public Stack<GameObject> menuHistory = new Stack<GameObject>();
     [HideInInspector] public int selectedGrassSkin;
 
     [SerializeField] private Sprite noneSprite;
@@ -100,6 +107,11 @@ public class GameManager : MonoBehaviour, IDataPersistence
             { Item.GrassBlades, bladesSprite },
             { Item.WateringCan, wateringCanSprite }
         };
+
+        foreach(GrassSkin skin in grassSkins)
+        {
+            skin.preview = Instantiate(skin.preview);
+        }
     }
 
     private void Start()
@@ -130,7 +142,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
             grassPools.Add(new ObjectPool<GameObject>(
                 () =>
                 {
-                    GameObject go = Instantiate(grassSkins[index]);
+                    GameObject go = Instantiate(grassSkins[index].skin);
                     GrassBladeController gbc = go.GetComponent<GrassBladeController>();
                     gbc.selectedGrassSkin = index;
                     grassCache[go] = gbc;
@@ -152,7 +164,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
                     gbc.currentSize = 0.01f;
                     gbc.daisies = 0;
                     gbc.OnHoverExit();
-                    go.transform.localScale = new Vector3(gbc.currentSize, gbc.currentSize, gbc.currentSize);
+                    gbc.growObject.transform.localScale = new Vector3(gbc.currentSize, gbc.currentSize, gbc.currentSize);
                     activeGrassBlades.Remove(grassCache[go]);
                     go.SetActive(false);
                 },
@@ -164,7 +176,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
 
             for(int j = 0; j < input; j++)
             {
-                GameObject go = Instantiate(grassSkins[index]);
+                GameObject go = Instantiate(grassSkins[index].skin);
                 GrassBladeController gbc = go.GetComponent<GrassBladeController>();
                 gbc.selectedGrassSkin = index;
                 grassCache[go] = gbc;

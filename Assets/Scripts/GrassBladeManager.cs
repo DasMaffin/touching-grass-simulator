@@ -71,6 +71,7 @@ public class GrassBladeManager : MonoBehaviour
         isInitialized = false;
     }
 
+    private JobHandle handle;
     private void Update()
     {
         if(!isInitialized || activeGrassBlades.Count == 0) return;
@@ -101,13 +102,13 @@ public class GrassBladeManager : MonoBehaviour
             NonWateredWeatherMultiplier = nonWateredWeatherMult
         };
 
-        JobHandle handle = job.Schedule(activeGrassBlades.Count, 64);
+        handle = job.Schedule(activeGrassBlades.Count, 64);
         handle.Complete();
 
         // Update blades with new values
         for(int i = 0; i < activeGrassBlades.Count; i++)
         {
-            var blade = activeGrassBlades[i];
+            GrassBladeController blade = activeGrassBlades[i];
             blade.currentSize = currentSizes[i];
             blade.UpdateScale();
         }
