@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
@@ -10,7 +12,7 @@ public class GrassBladeController : Interactible
     // These values need to be reset after returning to the pool.
     public bool watered = false;
     public float currentSize = 0.01f;
-    public int daisies = 0;
+    public List<FlowerController> affectingFlowers = new List<FlowerController>();
 
     #endregion
 
@@ -30,6 +32,7 @@ public class GrassBladeController : Interactible
 
         base.Awake();
     }
+
     private void OnEnable()
     {
         GrassBladeManager.Instance?.RegisterBlade(this);
@@ -40,6 +43,7 @@ public class GrassBladeController : Interactible
     {
         GrassBladeManager.Instance?.UnregisterBlade(this);
     }
+
     public void UpdateScale()
     {
         growObject.localScale = new Vector3(currentSize, currentSize, currentSize);
@@ -52,15 +56,9 @@ public class GrassBladeController : Interactible
             enteredWaters++;
             watered = true;
         }
-        switch(other.gameObject.GetComponent<FlowerController>()?.Flower)
+        else if(other.gameObject.layer == LayerMask.NameToLayer("NPC Noninteractible") && GameManager.Instance.flowerCache[other.gameObject].FinishedGrowing)
         {
-            case FlowerType.Daisy:
-                daisies++;
-                break;
-            case FlowerType.Dandelion:
-                break;
-            case FlowerType.None:
-                break;
+            affectingFlowers.Add(GameManager.Instance.flowerCache[other.gameObject]);
         }
     }
 
@@ -90,9 +88,17 @@ public class GrassBladeController : Interactible
         if(FinishedGrowing)
         {
             InventoryManager.Instance.AddItem(Item.GrassBlades, 1);
-            while(UnityEngine.Random.Range(0, 101) < 5 * daisies)
+            float chance = affectingFlowers.Sum(f => 
+            {
+                if(f.currentSize >= f.desiredSize)
+                    return f.bonusDropChanceAdditive;
+                else 
+                    return 0;
+            });
+            while(UnityEngine.Random.Range(0, 101) < chance)
             {
                 InventoryManager.Instance.AddItem(Item.GrassBlades, 1);
+                chance /= 5;
             }
             GameManager.Instance.ITT.RemoveGrassBlade(this.transform.position.x, this.transform.position.y, this.transform.position.z);
 

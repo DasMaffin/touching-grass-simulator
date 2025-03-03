@@ -32,9 +32,9 @@ public class GrassPreviewController : MonoBehaviour
         ActiveController = null;
 
         Collider myCol = this.GetComponent<Collider>();
-        foreach(var collider in disableTriggers)
+        foreach(var collider in collidersInTrigger)
         {
-            collider.GetComponent<FlowerController>()?.OnTriggerExit(myCol);
+            collider.GetComponentInParent<FlowerController>()?.OnTriggerExit(myCol);
         }
         disableTriggers.Clear();
         collidersInTrigger.Clear();

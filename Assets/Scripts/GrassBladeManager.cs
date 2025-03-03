@@ -12,6 +12,7 @@ public class GrassBladeManager : MonoBehaviour
     private NativeArray<bool> wateredStates;
     private NativeArray<float> growSpeeds;
     private NativeArray<float> wateredMultipliers;
+    private NativeArray<float> flowerGrowthMultipliers;
     private bool isInitialized;
 
     public List<GrassBladeController> activeGrassBlades = new List<GrassBladeController>(); // TODO Change this to use GameManager.Instance.activeGrassBlade (It may update too early right now)
@@ -57,6 +58,7 @@ public class GrassBladeManager : MonoBehaviour
         wateredStates = new NativeArray<bool>(capacity, Allocator.Persistent);
         growSpeeds = new NativeArray<float>(capacity, Allocator.Persistent);
         wateredMultipliers = new NativeArray<float>(capacity, Allocator.Persistent);
+        flowerGrowthMultipliers = new NativeArray<float>(capacity, Allocator.Persistent);
         isInitialized = true;
     }
 
@@ -67,7 +69,8 @@ public class GrassBladeManager : MonoBehaviour
         currentSizes.Dispose();
         wateredStates.Dispose();
         growSpeeds.Dispose();
-        wateredMultipliers.Dispose();
+        wateredMultipliers.Dispose(); 
+        flowerGrowthMultipliers.Dispose();
         isInitialized = false;
     }
 
@@ -76,19 +79,19 @@ public class GrassBladeManager : MonoBehaviour
     {
         if(!isInitialized || activeGrassBlades.Count == 0) return;
 
+        float wateredWeatherMult = WeatherManager.Instance.GetGrowthMultiplier(true);
+        float nonWateredWeatherMult = WeatherManager.Instance.GetGrowthMultiplier(false);
+
         // Copy data to NativeArrays
         for(int i = 0; i < activeGrassBlades.Count; i++)
         {
-            var blade = activeGrassBlades[i];
+            GrassBladeController blade = activeGrassBlades[i];
             currentSizes[i] = blade.currentSize;
             wateredStates[i] = blade.watered;
             growSpeeds[i] = blade.growSpeed;
             wateredMultipliers[i] = blade.wateredMultiplier;
+            flowerGrowthMultipliers[i] = CalculateFlowerBonus(blade.affectingFlowers);
         }
-
-        // Get weather multipliers
-        float wateredWeatherMult = WeatherManager.Instance.GetGrowthMultiplier(true);
-        float nonWateredWeatherMult = WeatherManager.Instance.GetGrowthMultiplier(false);
 
         // Schedule and complete job
         var job = new GrowthJob
@@ -97,6 +100,7 @@ public class GrassBladeManager : MonoBehaviour
             WateredStates = wateredStates,
             GrowSpeeds = growSpeeds,
             WateredMultipliers = wateredMultipliers,
+            FlowerGrowthMultipliers = flowerGrowthMultipliers,
             DeltaTime = Time.deltaTime,
             WateredWeatherMultiplier = wateredWeatherMult,
             NonWateredWeatherMultiplier = nonWateredWeatherMult
@@ -113,6 +117,30 @@ public class GrassBladeManager : MonoBehaviour
             blade.UpdateScale();
         }
     }
+
+    private float CalculateFlowerBonus(List<FlowerController> flowers)
+    {
+        if(flowers == null || flowers.Count == 0) return 1f;
+
+        float posSum = 1f;
+        float negSum = 0f;
+        foreach(var flower in flowers)
+        {
+            if(flower.bonusGrowthSpeedAdditive >= 1f)
+            {
+                posSum += flower.bonusGrowthSpeedAdditive - 1f;
+            }
+            else if(flower.bonusGrowthSpeedAdditive > 0f)
+            {
+                negSum += 1f / flower.bonusGrowthSpeedAdditive;
+            }
+        }
+        if(negSum != 0) negSum = 1 / negSum;
+
+        float sum = posSum * negSum;
+
+        return sum;
+    }
 }
 
 [BurstCompile]
@@ -121,7 +149,8 @@ public struct GrowthJob : IJobParallelFor
     public NativeArray<float> CurrentSizes;
     [ReadOnly] public NativeArray<bool> WateredStates;
     [ReadOnly] public NativeArray<float> GrowSpeeds;
-    [ReadOnly] public NativeArray<float> WateredMultipliers;
+    [ReadOnly] public NativeArray<float> WateredMultipliers; 
+    [ReadOnly] public NativeArray<float> FlowerGrowthMultipliers;
     [ReadOnly] public float DeltaTime;
     [ReadOnly] public float WateredWeatherMultiplier;
     [ReadOnly] public float NonWateredWeatherMultiplier;
@@ -141,6 +170,8 @@ public struct GrowthJob : IJobParallelFor
         {
             growth *= WateredMultipliers[index];
         }
+
+        growth *= FlowerGrowthMultipliers[index];
 
         currentSize = Mathf.Min(currentSize + growth, 1f);
         CurrentSizes[index] = currentSize;

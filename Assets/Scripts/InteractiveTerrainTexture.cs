@@ -89,16 +89,13 @@ public class InteractiveTerrainTexture : MonoBehaviour
 
     private void HandleGrassBlade(Vector3 hitPoint, InventoryItem ii)
     {
-        if(InventoryManager.Instance.GetItemCount(Item.GrassSeeds) > 0)
-        {
-            SpawnGrassBlade(hitPoint.x, hitPoint.y, hitPoint.z);
-            InventoryManager.Instance.RemoveItem(Item.GrassSeeds, 1, ii);
-        }
+        SpawnNewPlant(hitPoint.x, hitPoint.y, hitPoint.z, ii);
+        InventoryManager.Instance.RemoveItem(ii.Item, 1, ii);
     }
 
-    private void SpawnGrassBlade(float x, float y, float z)
+    private void SpawnNewPlant(float x, float y, float z, InventoryItem ii)
     {
-        GameManager.Instance.InstantiateGrass(new Vector3(x, y, z));
+        GameManager.Instance.InstantiatePlant(new Vector3(x, y, z), ii.Item);
 
         UpdateAlphaMap(x, y, z, 0.1f);
     }

@@ -54,6 +54,7 @@ public class InventoryItem
         if(GameManager.Instance.menuHistory.Count != 0) return;
         switch(Item)
         {
+            case Item.DaisySeeds:
             case Item.GrassSeeds:
                 GrassPreviewController.ActiveController.PlantGrass(this);
                 break;
@@ -81,6 +82,7 @@ public class InventoryItem
                 break;
             case Item.GrassBlades:
             case Item.GrassSeeds:
+            case Item.DaisySeeds:
             default:
                 break;
         }
@@ -96,6 +98,10 @@ public class InventoryItem
                 break;
             case Item.GrassSeeds:
                 GameManager.Instance.grassSkins[GameManager.Instance.selectedGrassSkin].preview.SetActive(true);
+                CameraController.Instance.canInteract = false;
+                break;
+            case Item.DaisySeeds:
+                GameManager.Instance.flowers[0].preview.SetActive(true);
                 CameraController.Instance.canInteract = false;
                 break;
             case Item.GrassBlades:
@@ -114,6 +120,10 @@ public class InventoryItem
                 break;
             case Item.GrassSeeds:
                 GameManager.Instance.grassSkins[GameManager.Instance.selectedGrassSkin].preview.SetActive(false);
+                CameraController.Instance.canInteract = true;
+                break;
+            case Item.DaisySeeds:
+                GameManager.Instance.flowers[0].preview.SetActive(false);
                 CameraController.Instance.canInteract = true;
                 break;
             case Item.GrassBlades:
@@ -216,6 +226,7 @@ public class InventoryManager : MonoBehaviour, IDataPersistence
 
     public void AddItem(Item item, int amount)
     {
+        if(amount == 0) return;
         InventoryItem inventoryItem = items.ToList().Find(i => i.Item == item && i.Owned < i.MaxStackSize);
         insertSlot = null;
         if(inventoryItem == null) // If there is no item of this in the inventory or only full stacks

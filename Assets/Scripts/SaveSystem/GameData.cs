@@ -12,6 +12,14 @@ public class GameData
     }
 
     [System.Serializable]
+    public class FlowerData
+    {
+        public FlowerType flower;
+        public Vector3 location;
+        public float currentSize;
+    }
+
+    [System.Serializable]
     public class  InventorySlotData
     {
         public int slotId;
@@ -22,6 +30,7 @@ public class GameData
     public float money;
     public float water;
     public List<GrassBladeData> grassPlants;
+    public List<FlowerData> flowerPlants;
     public List<InventorySlotData> inventorySlots;
 
     // These are the default values used when no savefile exists.
@@ -29,6 +38,7 @@ public class GameData
     {
         this.money = 0;
         this.water = 100f;
+        flowerPlants = new List<FlowerData>();
         grassPlants = new List<GrassBladeData>();
         grassPlants.Add(new GrassBladeData
         {

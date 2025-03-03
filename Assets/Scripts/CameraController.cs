@@ -100,7 +100,7 @@ public class CameraController : MonoBehaviour
         UnityEngine.Ray ray = Camera.main.ScreenPointToRay(screenCenter);
         UnityEngine.RaycastHit hit;
         bool hitObj = Physics.Raycast(ray, out hit, rayDistance, layersToCheck);
-        Interactible i = hit.collider?.gameObject.GetComponent<Interactible>();
+        Interactible i = hit.collider?.gameObject.GetComponentInParent<Interactible>();
 
         if(lastObject != null && ((i != null && lastObject != i) || i == null))
         {

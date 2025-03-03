@@ -1,10 +1,43 @@
+using NUnit.Framework;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Xml.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ShopEntryController : MonoBehaviour
 {
+    private static readonly List<ShopEntryController> instances = new();
+
+    public static IEnumerable<ShopEntryController> Instances => instances;
+
+    private void OnEnable() => instances.Add(this);
+    private void OnDisable() => instances.Remove(this);
+
+    private float availableMoney 
+    { 
+        get
+        {
+            return GameManager.Instance.player.Money - currentTotalPrice;
+        } 
+    }
+
+    private float currentTotalPrice 
+    {
+        get
+        {
+            return Instances.Sum(i =>
+            {
+                if(i != this)
+                {
+                    return i.totalAmount * i.price;
+                }
+                else return 0;
+            });
+        }
+    }
 
     [SerializeField] private TMP_InputField inputField;
     [SerializeField] private float price;
@@ -25,23 +58,17 @@ public class ShopEntryController : MonoBehaviour
         }
     }
     private int totalPrice { get => totalAmount * (int)price; }
-    private int maxAmount { get => Mathf.FloorToInt(GameManager.Instance.player.Money / price); }
+    private int maxAmount { get => Mathf.FloorToInt(availableMoney / price); }
 
     private void Awake()
     {
         ShopManager.Instance.BuyAllItems += Buy;
+        inputField.text = "0";
     }
 
     public void Buy()
     {
-        switch(shopItem)
-        {
-            case Item.GrassSeeds:
-                InventoryManager.Instance.AddItem(Item.GrassSeeds, totalAmount);
-                break;
-            case Item.None:
-                break;
-        }
+        InventoryManager.Instance.AddItem(shopItem, totalAmount);
 
         GameManager.Instance.player.Money -= totalPrice;
         inputField.text = "0";
@@ -58,7 +85,7 @@ public class ShopEntryController : MonoBehaviour
         {
             inputField.text = "0";
         }
-        else if(totalAmount < maxAmount)
+        else if(availableMoney > price)
         {
             inputField.text = (int.Parse(inputField.text) + 1).ToString();
         }
@@ -78,7 +105,7 @@ public class ShopEntryController : MonoBehaviour
 
     public void OnInputChanged(string newInput)
     {
-        if(int.TryParse(newInput, out int res) && res > maxAmount)
+        if(int.TryParse(newInput, out int res) && res * price > availableMoney)
         {
             inputField.text = maxAmount.ToString();
         }

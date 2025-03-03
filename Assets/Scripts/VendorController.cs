@@ -22,7 +22,7 @@ public class VendorController : Interactible
             {
                 return;
             }
-            GameManager.Instance.player.Money += 1.5f * InventoryManager.Instance.GetItemCount(Item.GrassBlades);
+            GameManager.Instance.player.Money += 1.15f * InventoryManager.Instance.GetItemCount(Item.GrassBlades);
             InventoryManager.Instance.RemoveAllItems(Item.GrassBlades);
         }
         else

@@ -5,11 +5,13 @@ using UnityEngine.UI;
 public class StatUpdater : MonoBehaviour
 {
     public TextMeshProUGUI moneyText;
+    public TextMeshProUGUI buildText;
     public Slider waterSlider;
 
     void Awake()
     {
         GameManager.Instance.player.OnMoneyChanged += UpdateMoneyUI;
+        GameManager.Instance.OnBuildChanged += UpdateBuildUI;
         GameManager.Instance.player.OnAvailableWaterChanged += UpdateAvailableWaterUI;
     }
 
@@ -21,5 +23,10 @@ public class StatUpdater : MonoBehaviour
     void UpdateAvailableWaterUI(float newValue)
     {
         waterSlider.value = newValue;
+    }
+
+    void UpdateBuildUI(float newValue)
+    {
+        buildText.text = "Build Id: " + newValue.ToString("N0");
     }
 }

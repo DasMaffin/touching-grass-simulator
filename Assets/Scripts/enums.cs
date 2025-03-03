@@ -1,8 +1,7 @@
 public enum FlowerType
 {
-    None = 0,
-    Daisy = 1,
-    Dandelion = 2
+    Daisy = 0,
+    Dandelion = 1
 }
 
 public enum Item
@@ -10,7 +9,8 @@ public enum Item
     None = 0,
     GrassSeeds = 1,
     GrassBlades = 2,
-    WateringCan = 3
+    WateringCan = 3,
+    DaisySeeds = 4
 }
 
 public enum Weather
