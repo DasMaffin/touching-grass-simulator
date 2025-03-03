@@ -12,7 +12,15 @@ public abstract class Interactible : MonoBehaviour
     {
         outline = GetComponent<Outline>();
     }
-    public abstract void onInteract();
-    public abstract void OnHoverEnter();
-    public abstract void OnHoverExit();
+    public virtual void onInteract() { }
+    public virtual void OnHoverEnter()
+    {
+        if(PlayerController.Instance != null)
+            PlayerController.Instance.canUseWateringCan = false;
+    }
+    public virtual void OnHoverExit()
+    {
+        if(PlayerController.Instance != null)
+            PlayerController.Instance.canUseWateringCan = true;
+    }
 }

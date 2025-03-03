@@ -7,6 +7,7 @@ using UnityEngine.Windows;
 using Unity.Collections;
 using Unity.Jobs;
 using Unity.VisualScripting;
+using static GameData;
 
 public class Player
 {
@@ -34,6 +35,21 @@ public class Player
         {
             availableWater = value;
             OnAvailableWaterChanged?.Invoke(availableWater);
+        }
+    }
+
+    public event Action<float> OnMaxAvailableWaterChanged;
+    private float maxAvailableWater;
+    public float MaxAvailableWater
+    {
+        get
+        {
+            return maxAvailableWater;
+        }
+        set
+        {
+            maxAvailableWater = value;
+            OnMaxAvailableWaterChanged?.Invoke(maxAvailableWater);
         }
     }
 
@@ -87,6 +103,8 @@ public class GameManager : MonoBehaviour, IDataPersistence
     public Flower[] flowers;
     public List<GrassBladeController> activeGrassBlades = new List<GrassBladeController>();
     public List<FlowerController> activeFlowers = new List<FlowerController>();
+    public List<Building> activeBuildings = new List<Building>();
+    public GameObject WaterTank;
     public BuildInfo BuildInfo;
 
     [HideInInspector] public Player player;
@@ -282,7 +300,8 @@ public class GameManager : MonoBehaviour, IDataPersistence
     public void LoadData(GameData data)
     {
         this.player.Money = data.money;
-        this.player.AvailableWater = 100f; // TODO data.water;
+        this.player.AvailableWater = Mathf.Min(data.water, data.maxWater);
+        this.player.MaxAvailableWater = data.maxWater;
         foreach(GameData.GrassBladeData gbd in data.grassPlants)
         {
             GrassBladeController gbc = InstantiatePlant(gbd.location, Item.GrassSeeds).GetComponent<GrassBladeController>();
@@ -301,12 +320,33 @@ public class GameManager : MonoBehaviour, IDataPersistence
                     break;
             }
         }
+
+
+
+        if(data.waterTanks.Count == 0)
+        {
+            data.waterTanks = new List<WaterTankData>
+            {
+                new WaterTankData
+                {
+                    location = new Vector3(497,0,502),
+                    fillAmount = 0f
+                }
+            };
+        }
+        foreach(GameData.WaterTankData waterTank in data.waterTanks)
+        {
+            WaterTankController wtc = Instantiate(WaterTank, waterTank.location, WaterTank.transform.rotation, null).GetComponent<WaterTankController>();
+            wtc.fillState = waterTank.fillAmount;
+            activeBuildings.Add(wtc);
+        }
     }
 
     public void SaveData(ref GameData data)
     {
         data.money = this.player.Money;
         data.water = this.player.AvailableWater;
+        data.maxWater = this.player.MaxAvailableWater;
         data.grassPlants = new List<GameData.GrassBladeData>();
         foreach(GrassBladeController gbc in activeGrassBlades)
         {
@@ -325,6 +365,19 @@ public class GameManager : MonoBehaviour, IDataPersistence
                 currentSize = fc.currentSize,
                 flower = fc.Flower
             });
+        }
+
+        data.waterTanks = new List<GameData.WaterTankData>();
+        foreach(Building b in activeBuildings)
+        {
+            if(b is WaterTankController wtc)
+            {
+                data.waterTanks.Add(new GameData.WaterTankData
+                {
+                    location = wtc.transform.position,
+                    fillAmount = wtc.fillState
+                });
+            }
         }
     }
 

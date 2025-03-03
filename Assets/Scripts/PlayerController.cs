@@ -28,6 +28,7 @@ public class PlayerController : MonoBehaviour
     public float jumpHeight = 1.5f; // Jump height
     public GameObject wateringCan;
     public GameObject wateringCanUI;
+    public bool canUseWateringCan = true;
 
     private CharacterController characterController;
     private Vector3 velocity; // Current velocity for gravity and jumping
@@ -62,7 +63,7 @@ public class PlayerController : MonoBehaviour
 
     public void UseWateringCan()
     {
-        if(GameManager.Instance.player.AvailableWater <= 0) return;
+        if(GameManager.Instance.player.AvailableWater <= 0 || !canUseWateringCan) return;
         wateringCanAnimator.SetBool("IsWatering", true);
         GameManager.Instance.player.IsWatering = true;
     }

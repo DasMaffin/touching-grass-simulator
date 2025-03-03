@@ -90,9 +90,11 @@ public class FlowerController : Interactible
 
     public override void OnHoverEnter()
     {
+        base.OnHoverEnter();
     }
 
     public override void OnHoverExit()
     {
+        base.OnHoverExit();
     }
 }

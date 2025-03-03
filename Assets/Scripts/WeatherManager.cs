@@ -33,7 +33,7 @@ public class WeatherManager : MonoBehaviour
     // 0.0 - 0.32999... = Light
     // 0.33 - 0,66999... = medium
     // 0.67 - 1 = Heavy
-    [SerializeField] RainScript rs;
+    [SerializeField] public RainScript rs;
 
     /// <summary>
     /// Arg1: OldWeather
@@ -112,16 +112,9 @@ public class WeatherManager : MonoBehaviour
             default:
                 break;
         }
-
-        EntityManager entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-
-        Entity weatherEntity = entityManager.CreateEntityQuery(typeof(WeatherComponent)).GetSingletonEntity();
-        WeatherComponent weatherComponent = entityManager.GetComponentData<WeatherComponent>(weatherEntity);
-
-        weatherComponent.rainIntensity = rs.RainIntensity;
-        entityManager.SetComponentData(weatherEntity, weatherComponent);
     }
 
+    [ContextMenu("Change Weather")]
     private void ChangeWeather()
     {
         float chance = UnityEngine.Random.Range(0f, 100f);

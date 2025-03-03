@@ -76,11 +76,13 @@ public class GrassBladeController : Interactible
     {
         if(!FinishedGrowing) return;
         outline.enabled = true;
+        base.OnHoverEnter();
     }
 
     public override void OnHoverExit()
     {
         outline.enabled = false;
+        base.OnHoverExit();
     }
 
     public override void onInteract()

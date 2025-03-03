@@ -123,7 +123,8 @@ public class GrassBladeManager : MonoBehaviour
         if(flowers == null || flowers.Count == 0) return 1f;
 
         float posSum = 1f;
-        float negSum = 0f;
+        int negCount = 0;
+
         foreach(var flower in flowers)
         {
             if(flower.bonusGrowthSpeedAdditive >= 1f)
@@ -132,10 +133,11 @@ public class GrassBladeManager : MonoBehaviour
             }
             else if(flower.bonusGrowthSpeedAdditive > 0f)
             {
-                negSum += 1f / flower.bonusGrowthSpeedAdditive;
+                negCount++;
             }
         }
-        if(negSum != 0) negSum = 1 / negSum;
+
+        float negSum = Mathf.Pow(0.9f, negCount); // Apply the new formula
 
         float sum = posSum * negSum;
 

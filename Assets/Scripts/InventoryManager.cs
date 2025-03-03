@@ -94,7 +94,6 @@ public class InventoryItem
         {
             case Item.WateringCan:
                 PlayerController.Instance.SelectWateringCan();
-                CameraController.Instance.canInteract = false;
                 break;
             case Item.GrassSeeds:
                 GameManager.Instance.grassSkins[GameManager.Instance.selectedGrassSkin].preview.SetActive(true);
@@ -116,7 +115,6 @@ public class InventoryItem
         {
             case Item.WateringCan:
                 PlayerController.Instance.DeselectWateringCan();
-                CameraController.Instance.canInteract = true;
                 break;
             case Item.GrassSeeds:
                 GameManager.Instance.grassSkins[GameManager.Instance.selectedGrassSkin].preview.SetActive(false);

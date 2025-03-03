@@ -7,11 +7,13 @@ public class VendorController : Interactible
     public override void OnHoverEnter()
     {
         outline.enabled = true;
+        base.OnHoverEnter();
     }
 
     public override void OnHoverExit()
     {
         outline.enabled = false;
+        base.OnHoverExit();
     }
 
     public override void onInteract()

@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +14,12 @@ public class StatUpdater : MonoBehaviour
         GameManager.Instance.player.OnMoneyChanged += UpdateMoneyUI;
         GameManager.Instance.OnBuildChanged += UpdateBuildUI;
         GameManager.Instance.player.OnAvailableWaterChanged += UpdateAvailableWaterUI;
+        GameManager.Instance.player.OnMaxAvailableWaterChanged += UpdateMaxAvailableWater;
+    }
+
+    private void UpdateMaxAvailableWater(float maxValue)
+    {
+        waterSlider.maxValue = maxValue;
     }
 
     void UpdateMoneyUI(float newValue)
