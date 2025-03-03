@@ -1,16 +1,19 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GrassPreviewController : MonoBehaviour
 {
     public static GrassPreviewController ActiveController = null;
-    public bool canBePlaced { get => activeTriggers == 0; }
+    public bool canBePlaced { get => disableTriggers.Count == 0; }
 
     [SerializeField] private Material canPlaceMaterial;
     [SerializeField] private Material cantPlaceMaterial;
-    [SerializeField] private int activeTriggers = 0;
 
     private MeshRenderer[] myMeshRenderers;
+
+    [SerializeField] private List<Collider> collidersInTrigger = new List<Collider>();
+    [SerializeField] private List<Collider> disableTriggers = new List<Collider>(); // Mind you if the other has 2 colliders it can be inside double.
 
     private void Start()
     {
@@ -26,22 +29,35 @@ public class GrassPreviewController : MonoBehaviour
 
     private void OnDisable()
     {
-        activeTriggers = 0;
         ActiveController = null;
+
+        Collider myCol = this.GetComponent<Collider>();
+        foreach(var collider in disableTriggers)
+        {
+            collider.GetComponent<FlowerController>()?.OnTriggerExit(myCol);
+        }
+        disableTriggers.Clear();
+        collidersInTrigger.Clear();
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.layer != LayerMask.NameToLayer("NPC Interactible") && other.gameObject.layer != LayerMask.NameToLayer("NPC Noninteractible")) return;
-        activeTriggers++;
+        collidersInTrigger.Add(other);
+        if(other.gameObject.layer == LayerMask.NameToLayer("NPC Interactible"))
+        {
+            disableTriggers.Add(other);
+        }
         if(!canBePlaced)
             UpdateMeshes(cantPlaceMaterial);
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if(other.gameObject.layer != LayerMask.NameToLayer("NPC Interactible") && other.gameObject.layer != LayerMask.NameToLayer("NPC Noninteractible")) return;
-        activeTriggers--;
+        collidersInTrigger.Remove(other);
+        if(other.gameObject.layer == LayerMask.NameToLayer("NPC Interactible"))
+        {
+            disableTriggers.Remove(other);
+        }
         if(canBePlaced)
             UpdateMeshes(canPlaceMaterial);
     }

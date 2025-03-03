@@ -64,6 +64,12 @@ public class InventoryItem
             default:
                 break;
         }
+
+        if(Owned <= 0)
+        {
+            Deselect();
+            InventoryManager.Instance.GetItemInSlot(InventoryBarManager.Instance.ActiveSlot)?.Select();
+        }
     }
 
     public void EndUse()

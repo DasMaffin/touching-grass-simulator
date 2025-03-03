@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8400034966575785797}
   - component: {fileID: 6409174121976100549}
   - component: {fileID: 9163011863113709586}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: GameObject (8)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 4654797769693472628}
   - component: {fileID: 5909874648472708502}
   - component: {fileID: 6382392588562840543}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: GameObject (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -181,7 +181,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5532231089400000816}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: Displacement
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -226,7 +226,7 @@ GameObject:
   - component: {fileID: 8064382961645690330}
   - component: {fileID: 8535952736383442918}
   - component: {fileID: 8354750607565991552}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: GameObject (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -312,7 +312,7 @@ GameObject:
   - component: {fileID: 6601779339064442767}
   - component: {fileID: 6607089107489859530}
   - component: {fileID: 4118518137739605056}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: GameObject (10)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -398,7 +398,7 @@ GameObject:
   - component: {fileID: 778170877481411241}
   - component: {fileID: 1324813284334373195}
   - component: {fileID: 6352590058574651014}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: GameObject (9)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -484,7 +484,7 @@ GameObject:
   - component: {fileID: 7422259326191176668}
   - component: {fileID: 397236684683851267}
   - component: {fileID: 1474521682729295505}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: GameObject (11)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -570,7 +570,7 @@ GameObject:
   - component: {fileID: 3251861477636205481}
   - component: {fileID: 1702067506428804773}
   - component: {fileID: 4183990076552754438}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: GameObject (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -656,7 +656,7 @@ GameObject:
   - component: {fileID: 3928976219816470640}
   - component: {fileID: 8355350974179760287}
   - component: {fileID: 5120198947675792617}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: GameObject (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -742,7 +742,7 @@ GameObject:
   - component: {fileID: 5117782843161087037}
   - component: {fileID: 6480249136429611083}
   - component: {fileID: 1132970023757557397}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: GameObject (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -828,7 +828,7 @@ GameObject:
   - component: {fileID: 404933120664710069}
   - component: {fileID: 8943184148220540313}
   - component: {fileID: 8799253879503481149}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -914,7 +914,7 @@ GameObject:
   - component: {fileID: 4438416436929685771}
   - component: {fileID: 8347248864917600546}
   - component: {fileID: 807668304939901143}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: GameObject (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1000,7 +1000,7 @@ GameObject:
   - component: {fileID: 1422480748158084816}
   - component: {fileID: 836933250052841889}
   - component: {fileID: 3461591206927075307}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: GameObject (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1087,7 +1087,7 @@ GameObject:
   - component: {fileID: 7063425579896314053}
   - component: {fileID: -1636441541747012729}
   - component: {fileID: 5312624546445856056}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: TuftOfGrassPreview
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1145,6 +1145,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canPlaceMaterial: {fileID: 2100000, guid: 5fd4c2c403916684b90f17b403863f03, type: 2}
   cantPlaceMaterial: {fileID: 2100000, guid: 37cdd8464c9f2c140843ce05b3bec74b, type: 2}
+  activeTriggers: 0
 --- !u!54 &5312624546445856056
 Rigidbody:
   m_ObjectHideFlags: 0

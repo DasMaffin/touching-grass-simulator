@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4272089981254054848}
   - component: {fileID: 288761155538671307}
   - component: {fileID: 4861410700387594715}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: Plant|Leaf|Dupli|9
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 7534717382026719758}
   - component: {fileID: 7755823576751649181}
   - component: {fileID: 2130302617499787983}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: Plant|Leaf|Dupli|16
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -183,7 +183,7 @@ GameObject:
   - component: {fileID: 4498605683662248780}
   - component: {fileID: 8621356819547390354}
   - component: {fileID: 4265458019001149673}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: Plant|Leaf|Dupli|24
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -269,7 +269,7 @@ GameObject:
   - component: {fileID: 2787093138487835417}
   - component: {fileID: 2282912943742730464}
   - component: {fileID: 6014605382355428607}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: Plant|Leaf|Dupli|
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -355,7 +355,7 @@ GameObject:
   - component: {fileID: 8381603254604032233}
   - component: {fileID: 8817955450118012176}
   - component: {fileID: 6219674010709666700}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: Plant|Leaf|Dupli|1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -441,7 +441,7 @@ GameObject:
   - component: {fileID: 4777925201483246309}
   - component: {fileID: 4462447400760583663}
   - component: {fileID: 2415641404328517464}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: Plant|Leaf|Dupli|11
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -527,7 +527,7 @@ GameObject:
   - component: {fileID: 2685702756025344329}
   - component: {fileID: 4175539660400029048}
   - component: {fileID: 3620081024545772644}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: Plant|Leaf|Dupli|5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -613,7 +613,7 @@ GameObject:
   - component: {fileID: 7115537167737034973}
   - component: {fileID: 5658717912535312936}
   - component: {fileID: 5607564603805348827}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: Plant|Leaf|Dupli|7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -699,7 +699,7 @@ GameObject:
   - component: {fileID: 6519272928792833775}
   - component: {fileID: 9177692910735085137}
   - component: {fileID: 4320746180176559429}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: Plant|Leaf|Dupli|6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -785,7 +785,7 @@ GameObject:
   - component: {fileID: 2052976509221596011}
   - component: {fileID: 6690814222183839075}
   - component: {fileID: 1905300812000090216}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: Plant|Leaf|Dupli|27
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -871,7 +871,7 @@ GameObject:
   - component: {fileID: 1978950227824702294}
   - component: {fileID: 4718300009912394321}
   - component: {fileID: 7814279595784801016}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: Plant|Leaf|Dupli|20
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -957,7 +957,7 @@ GameObject:
   - component: {fileID: 5096915421542326321}
   - component: {fileID: 8983082815315845131}
   - component: {fileID: 8935135830973997524}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: Plant|Leaf|Dupli|15
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1043,7 +1043,7 @@ GameObject:
   - component: {fileID: 3763334452168676600}
   - component: {fileID: 6548398262897182876}
   - component: {fileID: 1692831906335753381}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: Plant|Leaf|Dupli|23
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1129,7 +1129,7 @@ GameObject:
   - component: {fileID: 8044885064737420706}
   - component: {fileID: 4499908034320139834}
   - component: {fileID: 5014007817181692286}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: Plant|Leaf|Dupli|29
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1215,7 +1215,7 @@ GameObject:
   - component: {fileID: 2442108144024009446}
   - component: {fileID: 2311697077680811094}
   - component: {fileID: 504261965789364517}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: Plant|Leaf|Dupli|4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1301,7 +1301,7 @@ GameObject:
   - component: {fileID: 8433042648880375412}
   - component: {fileID: 4789401293364480649}
   - component: {fileID: 7857042868672172367}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: Plant|Leaf|Dupli|26
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1387,7 +1387,7 @@ GameObject:
   - component: {fileID: 4689331830313304465}
   - component: {fileID: 8327087649828269981}
   - component: {fileID: 1878525659023235768}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: Plant|Leaf|Dupli|2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1476,7 +1476,7 @@ GameObject:
   - component: {fileID: 4229698526957825986}
   - component: {fileID: 4554412344262173015}
   - component: {fileID: -5343953722887682158}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: Suspicious Plant Preview
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1616,6 +1616,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canPlaceMaterial: {fileID: 2100000, guid: 5fd4c2c403916684b90f17b403863f03, type: 2}
   cantPlaceMaterial: {fileID: 2100000, guid: 37cdd8464c9f2c140843ce05b3bec74b, type: 2}
+  activeTriggers: 0
 --- !u!54 &-5343953722887682158
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1654,7 +1655,7 @@ GameObject:
   - component: {fileID: 6968054300919093827}
   - component: {fileID: 8745842810828214841}
   - component: {fileID: 872929134426337262}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: Plant|Leaf|Dupli|3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1740,7 +1741,7 @@ GameObject:
   - component: {fileID: 3832190779762727448}
   - component: {fileID: 690194465523369888}
   - component: {fileID: 7489857261111926658}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: Plant|Leaf|Dupli|18
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1826,7 +1827,7 @@ GameObject:
   - component: {fileID: 5605714714473200107}
   - component: {fileID: 9059904222220977042}
   - component: {fileID: 1596791607971464974}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: Plant|Leaf|Dupli|12
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1912,7 +1913,7 @@ GameObject:
   - component: {fileID: 2991508093736004287}
   - component: {fileID: 7342542709036971073}
   - component: {fileID: 3943984917825036248}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: Plant|Leaf|Dupli|19
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1998,7 +1999,7 @@ GameObject:
   - component: {fileID: 816500316513209301}
   - component: {fileID: 1894734028755234614}
   - component: {fileID: 6512374403062120377}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: Plant|Leaf|Dupli|25
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2084,7 +2085,7 @@ GameObject:
   - component: {fileID: 7754816411034877822}
   - component: {fileID: 5567761462219486264}
   - component: {fileID: 7750751973837918297}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: Plant|Leaf|Dupli|22
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2170,7 +2171,7 @@ GameObject:
   - component: {fileID: 2749636239505224482}
   - component: {fileID: 4223972307215725202}
   - component: {fileID: 8338791859637001397}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: Plant|Leaf|Dupli|28
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2256,7 +2257,7 @@ GameObject:
   - component: {fileID: 2898667631243174511}
   - component: {fileID: 6578742664050242861}
   - component: {fileID: 2215269537051463946}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: Plant|Leaf|Dupli|10
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2342,7 +2343,7 @@ GameObject:
   - component: {fileID: 323026467621317126}
   - component: {fileID: 2330312179379752261}
   - component: {fileID: 8892263530439860705}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: Plant|Leaf|Dupli|17
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2428,7 +2429,7 @@ GameObject:
   - component: {fileID: 3106145467068641417}
   - component: {fileID: 7431281146913959542}
   - component: {fileID: 7620704284097662754}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: Plant|Leaf|Dupli|21
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2514,7 +2515,7 @@ GameObject:
   - component: {fileID: 2603928140715463034}
   - component: {fileID: 7975302588022778347}
   - component: {fileID: 6579770133194581698}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: Plant|Leaf|Dupli|14
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2600,7 +2601,7 @@ GameObject:
   - component: {fileID: 316637957544236599}
   - component: {fileID: 3471390077654834280}
   - component: {fileID: 345981925153814522}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: Plant|Leaf|Dupli|8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2686,7 +2687,7 @@ GameObject:
   - component: {fileID: 8080852005041542056}
   - component: {fileID: 1702557691772637077}
   - component: {fileID: 7846485144007049933}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: Plant|Leaf|Dupli|13
   m_TagString: Untagged
   m_Icon: {fileID: 0}
