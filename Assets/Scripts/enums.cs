@@ -1,7 +1,20 @@
 public enum FlowerType
 {
     Daisy = 0,
-    Dandelion = 1
+    Dandelion = 1,
+    Sunflower = 2,
+    Mycelia = 3,
+    Lavender = 4,
+    Bluebell = 5,
+    Tulip = 6,
+    WaterLily = 7,
+    PeonyCharm = 8,
+    IridescentOrchid = 9,
+    RoseBlossom = 10,
+    Chamomile = 11,
+    Poppy = 12,
+    FoxGlove = 13,
+    Edelweiﬂ = 14
 }
 
 public enum Item
